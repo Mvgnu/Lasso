@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "description": "Lasso peptide core prediction rule configuration (robust defaults)",
+  "description": "Lasso peptide core prediction rule configuration (robust defaults) by Magnus Ohle",
   "rules": {
     "core_start_residue": {
       "name": "core_start_residue",

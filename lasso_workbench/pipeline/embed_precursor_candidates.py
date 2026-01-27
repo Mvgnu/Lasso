@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Embed validated precursors and harvested ORFs with ESM-2 and score cosine similarity."""
+"""
+Embed validated precursors and harvested ORFs with ESM-2 and score cosine similarity.
+License: MIT
+Author: Magnus Ohle
+"""
 
 from __future__ import annotations
 

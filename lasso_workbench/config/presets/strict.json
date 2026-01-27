@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "description": "Preset: strict - High confidence predictions only. Requires G start, D/E ring at position 7-9, core 13-30 aa. Best for finding canonical lasso peptides.",
+  "description": "Preset: strict - High confidence predictions only. Requires G start, D/E ring at position 7-9, core 13-30 aa. Best for finding canonical lasso peptides. By Magnus Ohle",
   "rules": {
     "core_start_residue": {
       "name": "core_start_residue",

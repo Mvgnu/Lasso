@@ -1,5 +1,7 @@
 """
 Core sequence prediction from precursor peptides.
+License: MIT
+Author: Magnus Ohle
 
 This module provides rule-based prediction of lasso peptide core sequences
 from full precursor sequences, using configurable rules and patterns

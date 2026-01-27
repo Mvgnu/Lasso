@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Add curated precursor sequences to a validated dataset with consistent IDs.
+"""
+Add curated precursor sequences to a validated dataset with consistent IDs.
+License: MIT
+Author: Magnus Ohle
 
 Creates/updates:
 - data/precursors/precursor_proteins_curated.faa

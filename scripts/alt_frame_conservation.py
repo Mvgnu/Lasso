@@ -2,6 +2,8 @@
 """
 Scan GBK genomes for alt-frame ORFs overlapping housekeeping gene loci,
 score with the full ruleset, and summarize conservation across genomes.
+License: MIT
+Author: Magnus Ohle
 """
 from __future__ import annotations
 

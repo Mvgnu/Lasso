@@ -104,3 +104,7 @@ This updates:
 MIT License
 
 Made by Magnus Ohle
+
+## NOTICE
+
+See `NOTICE` for attribution and reuse guidance.

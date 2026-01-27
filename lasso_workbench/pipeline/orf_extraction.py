@@ -1,5 +1,7 @@
 """
 ORF extraction utilities for 6-frame translation.
+License: MIT
+Author: Magnus Ohle
 
 Extracts all potential open reading frames (ORFs) from a DNA sequence,
 handling bacterial translation rules (alternative start codons).

@@ -1,5 +1,7 @@
 """
 Core embedding scoring algorithms for Lasso peptide precursor discovery.
+License: MIT
+Author: Magnus Ohle
 """
 
 from __future__ import annotations

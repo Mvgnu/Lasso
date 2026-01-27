@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Generate multi-candidate precursor datasets anchored on lab core + peptidase loci.
+"""
+Generate multi-candidate precursor datasets anchored on lab core + peptidase loci.
+License: MIT
+Author: Magnus Ohle
 
 Workflow:
 1) Parse lab core table (semicolon CSV).

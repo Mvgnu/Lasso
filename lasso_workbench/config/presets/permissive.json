@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "description": "Preset: permissive - More relaxed criteria. Allows G/A/S/C starts, wider core range (10-35 aa). Good for finding divergent lasso peptides.",
+  "description": "Preset: permissive - More relaxed criteria. Allows G/A/S/C starts, wider core range (10-35 aa). Good for finding divergent lasso peptides. By Magnus Ohle",
   "rules": {
     "core_start_residue": {
       "name": "core_start_residue",

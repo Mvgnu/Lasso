@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Constraint-aware conservation test for alt-frame candidates (locus-level).
+License: MIT
+Author: Magnus Ohle
 
 Defines candidates by locus (gene + bin range + alt frame), not by seq_hash.
 For each locus:

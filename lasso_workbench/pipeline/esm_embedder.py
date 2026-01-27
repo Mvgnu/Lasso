@@ -1,4 +1,8 @@
-"""ESM-2 embedding wrapper (minimal, single implementation)."""
+"""
+ESM-2 embedding wrapper
+License: MIT
+Author: Magnus Ohle
+"""
 import os
 from typing import List, Optional
 

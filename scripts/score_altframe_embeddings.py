@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Score conserved alt-frame ORFs with existing ESM embedding + top-N mean cosine similarity.
+License: MIT
+Author: Magnus Ohle
 
 Steps:
 1) Filter conserved sequences from alt_frame_conservation summaries.

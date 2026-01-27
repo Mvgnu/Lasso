@@ -1,5 +1,7 @@
 """
 Embedding-first ranking with optional rule-score cutoff.
+License: MIT
+Author: Magnus Ohle
 
 Stage 1: Sort by embedding score (best_similarity or top_n_mean).
 Stage 2: If configured, compute rule scores and drop candidates below a cutoff.

@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "description": "Preset: discovery - Maximum sensitivity for novel peptides. Allows any start, extended ring positions (6-10), very wide core range. May produce false positives.",
+  "description": "Preset: discovery - Maximum sensitivity for novel peptides. Allows any start, extended ring positions (6-10), very wide core range. May produce false positives. By Magnus Ohle",
   "rules": {
     "core_start_residue": {
       "name": "core_start_residue",
