@@ -1,0 +1,30 @@
+{
+  "candidates_total": 244,
+  "core_groups_total": 75,
+  "cases_total": 75,
+  "variants": {
+    "rules_only": {
+      "topk_per_candidate": {
+        "exact": {
+          "1": 0.9016393442622951,
+          "3": 0.930327868852459,
+          "5": 0.930327868852459
+        }
+      },
+      "topk_best_per_core_group": {
+        "exact": {
+          "1": 0.9866666666666667,
+          "3": 1.0,
+          "5": 1.0
+        }
+      },
+      "topk_best_per_case": {
+        "exact": {
+          "1": 0.9866666666666667,
+          "3": 1.0,
+          "5": 1.0
+        }
+      }
+    }
+  }
+}

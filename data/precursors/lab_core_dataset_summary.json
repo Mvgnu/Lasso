@@ -1,0 +1,11 @@
+{
+  "total_cases": 116,
+  "mapped_peptidase": 87,
+  "cases_with_match_A": 76,
+  "cases_unambiguous": 45,
+  "cases_ambiguous": 31,
+  "cases_no_core_match": 11,
+  "loci_scanned": 303,
+  "loci_included": 266,
+  "ambiguous_loci_included": 221
+}

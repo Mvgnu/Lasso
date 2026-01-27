@@ -1,0 +1,12 @@
+{
+  "total_cases": 116,
+  "mapped_peptidase": 87,
+  "cases_with_match_A": 0,
+  "cases_unambiguous": 0,
+  "cases_ambiguous": 0,
+  "cases_no_core_match": 87,
+  "loci_scanned": 303,
+  "loci_included": 0,
+  "ambiguous_loci_included": 0,
+  "core_orientation": "core_leader"
+}

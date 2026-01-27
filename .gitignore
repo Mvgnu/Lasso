@@ -1,0 +1,19 @@
+# Large data directories
+antismash_lasso/
+genomes/
+scratch/
+build/
+alt_frame_conservation/
+results/alt_frame_conservation/
+
+
+# Python
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+
+# Genomes, archived logic
+*.gbk
+*.fna
+_archive/
