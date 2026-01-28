@@ -140,7 +140,10 @@ def parse_gbk_file(gbk_path: Path, index: int = 1) -> Optional[BGCSegment]:
             "length_nt": len(sequence),
             "num_annotated_cds": len(annotated_cds),
             **(
-                {"region_ranges": [{"start": s, "end": e} for s, e in region_ranges]}
+                {
+                    "region_ranges": [{"start": s, "end": e} for s, e in region_ranges],
+                    "region_source": "lasso",
+                }
                 if region_ranges
                 else {}
             ),
@@ -178,7 +181,13 @@ def extract_orfs(
     for segment in segments:
         seq = Seq(segment.sequence)
         region_ranges = segment.metadata.get("region_ranges", [])
-        windows = [(int(item["start"]), int(item["end"])) for item in region_ranges] or [(0, len(seq))]
+        use_region_ranges = bool(region_ranges)
+        if segment.metadata.get("region_source") == "lasso" and not segment.metadata.get("restrict_to_lasso", False):
+            use_region_ranges = False
+        if use_region_ranges:
+            windows = [(int(item["start"]), int(item["end"])) for item in region_ranges]
+        else:
+            windows = [(0, len(seq))]
         candidate_index = 1
 
         for window_start, window_end in windows:
@@ -385,7 +394,7 @@ def results_to_json(results: List[PipelineResult]) -> List[Dict]:
         "best_similarity",
         "best_match_id",
         "top_n_mean_similarity",
-        "combined_score",
+        "embedding_score",
         "is_known_precursor",
         "rule_orientation",
         "rule_score_raw",
@@ -461,7 +470,7 @@ def results_to_dataframe(results: List[PipelineResult]) -> pd.DataFrame:
         "best_similarity",
         "best_match_id",
         "top_n_mean_similarity",
-        "combined_score",
+        "embedding_score",
         "is_known_precursor",
         "rule_orientation",
     ]
@@ -487,6 +496,7 @@ def run_semantic_pipeline(
     top_n_mean: int = 5,
     ranker_predictor: Optional[CorePredictor] = None,
     segments: Optional[List[BGCSegment]] = None,
+    filter_lasso_only: bool = False,
 ) -> Tuple[List[PipelineResult], pd.DataFrame]:
     """
     Run the full semantic precursor discovery pipeline.
@@ -527,6 +537,16 @@ def run_semantic_pipeline(
             segment = parse_gbk_file(Path(gbk_path), idx)
             if segment:
                 segments_list.append(segment)
+
+    if filter_lasso_only:
+        before_count = len(segments_list)
+        segments_list = [seg for seg in segments_list if seg.is_lasso]
+        emit(f"[1/6] Filtered to lasso BGCs: {len(segments_list)} of {before_count}")
+        if not segments_list:
+            raise ValueError("No lasso-annotated BGCs found after filtering")
+
+    for seg in segments_list:
+        seg.metadata["restrict_to_lasso"] = bool(filter_lasso_only)
 
     context = PipelineContext(validated_faa=validated_faa, output_dir=output_dir, segments=segments_list)
     

@@ -152,6 +152,72 @@ def _write_faa(path: Path, entries: List[Tuple[str, str]]) -> None:
             for i in range(0, len(seq), 80):
                 handle.write(seq[i : i + 80] + "\n")
 
+def _write_verified_tsv(
+    path: Path,
+    multi_rows: List[dict],
+    curated_rows: List[dict],
+    multi_strict_source: Path,
+) -> None:
+    fieldnames = [
+        "id",
+        "name",
+        "sequence",
+        "length",
+        "core",
+        "orientation",
+        "locus",
+        "source",
+        "added_at",
+        "input",
+    ]
+    seen: set[str] = set()
+    rows: List[dict] = []
+
+    for row in multi_rows:
+        seq = _clean_seq(row.get("protein_sequence", ""))
+        if not seq or seq in seen:
+            continue
+        rows.append(
+            {
+                "id": row.get("candidate_id") or f"multi_{_seq_hash(seq)}",
+                "name": row.get("peptide_name") or row.get("candidate_id") or "",
+                "sequence": seq,
+                "length": row.get("aa_length") or len(seq),
+                "core": _clean_seq(row.get("core_aa", "")),
+                "orientation": "leader_core",
+                "locus": row.get("locus_id") or "",
+                "source": "multi_strict",
+                "added_at": "",
+                "input": str(multi_strict_source),
+            }
+        )
+        seen.add(seq)
+
+    for row in curated_rows:
+        seq = _clean_seq(row.get("sequence", ""))
+        if not seq or seq in seen:
+            continue
+        rows.append(
+            {
+                "id": row.get("id") or f"curated_{_seq_hash(seq)}",
+                "name": row.get("name") or "",
+                "sequence": seq,
+                "length": row.get("length") or len(seq),
+                "core": _clean_seq(row.get("core", "")),
+                "orientation": row.get("orientation") or "leader_core",
+                "locus": row.get("locus") or "",
+                "source": row.get("source") or "curated",
+                "added_at": row.get("added_at") or "",
+                "input": row.get("input") or "",
+            }
+        )
+        seen.add(seq)
+
+    with path.open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, delimiter="\t")
+        writer.writeheader()
+        writer.writerows(rows)
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -163,6 +229,7 @@ def main() -> int:
     parser.add_argument("--merge", action="store_true", default=True)
     parser.add_argument("--no-merge", action="store_false", dest="merge")
     parser.add_argument("--merge-output", type=str, default="precursor_proteins_verified.faa")
+    parser.add_argument("--merge-tsv-output", type=str, default="precursor_proteins_verified.tsv")
     parser.add_argument("--source", type=str, default="curated")
     parser.add_argument("--orientation", choices=["leader_core", "core_leader"], default="leader_core")
     args = parser.parse_args()
@@ -241,6 +308,7 @@ def main() -> int:
 
     if args.merge:
         generated = out_dir / "precursor_proteins_multi_strict.faa"
+        multi_strict_tsv = out_dir / "lab_core_candidates_multi_strict.tsv"
         merged_entries: List[Tuple[str, str]] = []
         seen = set()
         for path in (generated, curated_faa):
@@ -254,10 +322,17 @@ def main() -> int:
                 seen.add(seq)
         merged_path = out_dir / args.merge_output
         _write_faa(merged_path, merged_entries)
+        if multi_strict_tsv.exists():
+            multi_rows = _read_existing_tsv(multi_strict_tsv)
+        else:
+            multi_rows = []
+        verified_tsv_path = out_dir / args.merge_tsv_output
+        _write_verified_tsv(verified_tsv_path, multi_rows, updated_rows, multi_strict_tsv)
 
     print(f"Added {added} new precursors. Curated file: {curated_faa}")
     if args.merge:
         print(f"Merged verified file: {out_dir / args.merge_output}")
+        print(f"Merged verified TSV: {out_dir / args.merge_tsv_output}")
     return 0
 
 

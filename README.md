@@ -12,6 +12,10 @@ The Lasso Workbench implements a semantic discovery pipeline combining 6-frame t
 *   **Rule-Based Ranking**: Filters candidates using customizable heuristic constraints (leader motifs, core length) on top of semantic scores.
 *   **Dataset Management**: Utilities for curating of validated precursors.
 
+
+**Gaps:**
+*   **No Tail handling**: The current pipeline does not handle tail pruning in core prediction.
+
 ---
 
 ## Quick Start
@@ -65,6 +69,7 @@ Validated precursor reference sets live in `data/precursors/`.
 
 **Default validated set used by the UI:**
 * `precursor_proteins_verified.faa` — merged, de‑duplicated set combining `multi_strict` + `curated`
+* `precursor_proteins_verified.tsv` — merged metadata table (read‑only; used by the Dataset tab)
 
 ### Add new curated precursors
 
@@ -98,6 +103,7 @@ This updates:
 * `precursor_proteins_curated.faa`
 * `precursor_proteins_curated.tsv`
 * `precursor_proteins_verified.faa` (merged set used by default)
+* `precursor_proteins_verified.tsv` (merged metadata table)
 
 ## LICENSE
 

@@ -409,6 +409,13 @@ def main() -> int:
     parser.add_argument("--embed-batch-size", type=int, default=100)
     parser.add_argument("--score-batch-size", type=int, default=100)
     parser.add_argument("--top-n-mean", type=int, default=5)
+    parser.add_argument("--top-n-output", type=int, default=0, help="Keep only top N scored candidates (0 keeps all).")
+    parser.add_argument(
+        "--score-mode",
+        choices=["top_n_mean", "best_similarity"],
+        default="top_n_mean",
+        help="Score column used for top-N output filtering.",
+    )
     parser.add_argument("--gene-pad-nt", type=int, default=360)
     parser.add_argument("--null-per-candidate", type=int, default=1)
     parser.add_argument("--null-length-tol", type=int, default=0)
@@ -517,6 +524,10 @@ def main() -> int:
     summary_df["protein_sequence"] = summary_df["seq_hash"].map(sequences)
 
     output_df = summary_df.merge(scores_df[alt_mask], on="candidate_id", how="left")
+    if args.top_n_output and args.top_n_output > 0:
+        score_col = "top_n_mean_similarity" if args.score_mode == "top_n_mean" else "best_similarity"
+        if score_col in output_df.columns:
+            output_df = output_df.sort_values(score_col, ascending=False).head(args.top_n_output)
     out_path = args.output_dir / "altframe_embedding_scores.tsv"
     output_df.to_csv(out_path, sep="\t", index=False)
     logger.info("Wrote embedding scores to %s", out_path)

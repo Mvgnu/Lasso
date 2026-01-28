@@ -16,22 +16,20 @@ from lasso_workbench.visualization.pipeline_viz import generate_gradio_iframe_ht
 
 # Constants
 DEFAULT_PRECURSORS_PATH = DATA_DIR / "precursors" / "precursor_proteins_verified.faa"
-DEFAULT_PRECURSOR_SET_NAME = "Default (verified)"
-LEGACY_PRECURSOR_SET_NAME = "Legacy (36 curated)"
+DEFAULT_PRECURSOR_SET_NAME = "precursor_proteins_verified.faa"
+UPLOAD_CUSTOM_LABEL = "Upload Custom..."
 
 
 def get_available_precursor_sets() -> List[str]:
     """Get list of available precursor reference sets."""
-    sets = [DEFAULT_PRECURSOR_SET_NAME, LEGACY_PRECURSOR_SET_NAME]
+    sets: List[str] = []
     precursors_dir = DATA_DIR / "precursors"
     if precursors_dir.exists():
-        for faa_file in precursors_dir.glob("*.faa"):
-            if faa_file.name in {"precursor_proteins_verified.faa", "precursor_proteins_multi_strict.faa", "precursor_proteins_regen_validated.faa", "precursor_proteins.faa"}:
-                continue
-            if faa_file.stem in {DEFAULT_PRECURSOR_SET_NAME, LEGACY_PRECURSOR_SET_NAME}:
-                continue
-            sets.append(faa_file.stem)
-    sets.append("Upload Custom...")
+        for faa_file in sorted(precursors_dir.glob("*.faa")):
+            sets.append(faa_file.name)
+    if DEFAULT_PRECURSOR_SET_NAME not in sets:
+        sets.insert(0, DEFAULT_PRECURSOR_SET_NAME)
+    sets.append(UPLOAD_CUSTOM_LABEL)
     return sets
 
 
@@ -86,7 +84,7 @@ This pipeline:
                 choices=get_available_precursor_sets(),
                 value=DEFAULT_PRECURSOR_SET_NAME,
                 scale=2,
-                info="Validated precursors to compare against"
+                info="Pick a .faa file from data/precursors (default is precursor_proteins_verified.faa)"
             )
             pipeline_custom_fasta = gr.File(
                 label="Custom FASTA (optional)",
@@ -160,6 +158,11 @@ This pipeline:
                 value=False,
                 info="Enable inverted core+leader scoring (unreliable; needs dedicated training data)",
             )
+        filter_lasso_only = gr.Checkbox(
+            label="Filter to lasso BGCs only",
+            value=False,
+            info="Only show candidates from GBKs with lasso-annotated regions",
+        )
 
         # Section 4: Run
         gr.Markdown("---")
@@ -346,6 +349,7 @@ This pipeline:
             ranking_score_mode,
             ranking_rule_cutoff,
             ranking_allow_inverted,
+            filter_lasso_only,
             progress=gr.Progress(),
         ):
             if not segments:
@@ -356,9 +360,10 @@ This pipeline:
             validated_faa = DEFAULT_PRECURSORS_PATH
             if custom_fasta:
                 validated_faa = Path(custom_fasta.name)
-            elif precursor_set == LEGACY_PRECURSOR_SET_NAME:
-                # Legacy dataset archived - fall back to default multi-strict
-                validated_faa = DEFAULT_PRECURSORS_PATH
+            elif precursor_set and precursor_set != UPLOAD_CUSTOM_LABEL:
+                candidate = DATA_DIR / "precursors" / precursor_set
+                if candidate.exists():
+                    validated_faa = candidate
 
             ranking_config = RankingConfig(
                 score_mode=str(ranking_score_mode),
@@ -383,6 +388,7 @@ This pipeline:
                     progress_callback=p_callback,
                     ranking_config=ranking_config,
                     ranker_predictor=ranker_predictor,
+                    filter_lasso_only=bool(filter_lasso_only),
                 )
 
                 # Create JSON report + full dataframe
@@ -405,8 +411,9 @@ This pipeline:
                 # Generate visualization HTML
                 viz_html = generate_gradio_iframe_html(json_data, initial_selection=[], title="Pipeline Results")
 
-                status = f"Completed! Found {len(all_df)} candidates across {len(results)} BGCs."
-                return status, metadata_text, all_df, json_str, json_data, full_df, viz_html
+                display_df = full_df
+                status = f"Completed! Found {len(display_df)} candidates across {len(results)} BGCs."
+                return status, metadata_text, display_df, json_str, json_data, full_df, viz_html
 
             except Exception as e:
                 import traceback
@@ -426,6 +433,8 @@ This pipeline:
                 pipeline_model,
                 ranking_score_mode,
                 ranking_rule_cutoff,
+                ranking_allow_inverted,
+                filter_lasso_only,
             ],
             outputs=[
                 pipeline_status,
@@ -565,7 +574,7 @@ This pipeline:
                     candidate_lookup[cand["candidate_id"]] = {
                         "sequence": cand.get("protein_sequence", ""),
                         "record_id": bgc.get("record_id", ""),
-                        "score": cand.get("combined_score") or cand.get("top_n_mean_similarity") or cand.get("best_similarity", 0),
+                        "score": cand.get("embedding_score") or cand.get("top_n_mean_similarity") or cand.get("best_similarity", 0),
                         "aa_length": cand.get("aa_length", 0),
                     }
 
@@ -670,7 +679,7 @@ This pipeline:
                     "candidate_id": candidate_id,
                     "record_id": cand.get("record_id", ""),
                     "protein_sequence": cand.get("protein_sequence", ""),
-                    "similarity_score": cand.get("combined_score") or cand.get("top_n_mean_similarity") or cand.get("best_similarity", 0),
+                    "similarity_score": cand.get("embedding_score") or cand.get("top_n_mean_similarity") or cand.get("best_similarity", 0),
                     "aa_length": cand.get("aa_length", 0),
                     "genomic_start": cand.get("genomic_start", 0),
                     "genomic_end": cand.get("genomic_end", 0),
@@ -720,7 +729,7 @@ This pipeline:
                     continue
 
                 cand = candidate_lookup[candidate_id]
-                score = cand.get("combined_score") or cand.get("top_n_mean_similarity") or cand.get("best_similarity", 0)
+                score = cand.get("embedding_score") or cand.get("top_n_mean_similarity") or cand.get("best_similarity", 0)
 
                 # Export the full precursor sequence
                 seq = cand.get("protein_sequence", "")

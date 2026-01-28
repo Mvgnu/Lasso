@@ -694,7 +694,7 @@ function formatNumber(n) {{
 }}
 
 function getScore(c) {{
-    const score = c.combined_score || c.top_n_mean_similarity || c.best_similarity || 0;
+    const score = c.embedding_score || c.top_n_mean_similarity || c.best_similarity || 0;
     return isFinite(score) ? score : 0;
 }}
 
@@ -801,7 +801,7 @@ function getFilteredCandidates(candidates) {{
     if (!candidates) return [];
 
     let filtered = candidates.filter(c => {{
-        const score = c.combined_score || c.top_n_mean_similarity || c.best_similarity || 0;
+        const score = c.embedding_score || c.top_n_mean_similarity || c.best_similarity || 0;
         if (score < currentThreshold) return false;
 
         const isKnown = Boolean(c.is_known_precursor);
@@ -813,8 +813,8 @@ function getFilteredCandidates(candidates) {{
 
     // Sort by score
     filtered.sort((a, b) => {{
-        const scoreA = a.combined_score || a.top_n_mean_similarity || a.best_similarity || 0;
-        const scoreB = b.combined_score || b.top_n_mean_similarity || b.best_similarity || 0;
+        const scoreA = a.embedding_score || a.top_n_mean_similarity || a.best_similarity || 0;
+        const scoreB = b.embedding_score || b.top_n_mean_similarity || b.best_similarity || 0;
         return scoreB - scoreA;
     }});
 
@@ -1361,7 +1361,7 @@ function showTooltip(event, type, element) {{
         html = `
             <div class="tooltip-title">${{escapeHtml(data.candidate_id)}}</div>
             <div class="tooltip-row"><span class="tooltip-label">Type:</span> ${{isKnown ? 'Known precursor' : 'Novel candidate'}}</div>
-            <div class="tooltip-row"><span class="tooltip-label">Score:</span> ${{(data.combined_score || data.top_n_mean_similarity || data.best_similarity || 0).toFixed(4)}}</div>
+            <div class="tooltip-row"><span class="tooltip-label">Score:</span> ${{(data.embedding_score || data.top_n_mean_similarity || data.best_similarity || 0).toFixed(4)}}</div>
             <div class="tooltip-row"><span class="tooltip-label">Length:</span> ${{data.aa_length}} aa</div>
             <div class="tooltip-row"><span class="tooltip-label">Location:</span> ${{formatNumber(data.genomic_start)}} - ${{formatNumber(data.genomic_end)}}</div>
             ${{data.best_match_id ? `<div class="tooltip-row"><span class="tooltip-label">Best match:</span> ${{escapeHtml(data.best_match_id)}}</div>` : ''}}

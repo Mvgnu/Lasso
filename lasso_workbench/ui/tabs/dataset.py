@@ -174,7 +174,12 @@ def create_dataset_tab(data_service: DataService):
         # Dataset selector
         gr.Markdown("---")
         dataset_choices = get_available_datasets()
-        default_dataset = dataset_choices[0] if dataset_choices else None
+        default_dataset = None
+        verified_name = "precursors/precursor_proteins_verified.tsv"
+        if verified_name in dataset_choices:
+            default_dataset = verified_name
+        elif dataset_choices:
+            default_dataset = dataset_choices[0]
 
         with gr.Row():
             dataset_selector = gr.Dropdown(

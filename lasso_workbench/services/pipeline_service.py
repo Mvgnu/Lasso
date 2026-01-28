@@ -53,6 +53,7 @@ class PipelineService:
         out_dir: Optional[Path] = None,
         progress_callback=None,
         ranker_predictor: Optional[CorePredictor] = None,
+        filter_lasso_only: bool = False,
     ) -> Tuple[List[PipelineResult], pd.DataFrame]:
         """
         Run the full pipeline: ORF extraction -> Embedding -> Scoring -> Reporting.
@@ -68,6 +69,7 @@ class PipelineService:
             progress_callback: Optional progress callback function
             ranking_config: Two-stage ranking configuration
             ranker_predictor: Optional CorePredictor for rule-based re-ranking
+            filter_lasso_only: If True, only analyze lasso-annotated BGCs
         """
         if out_dir is None:
             out_dir = Path(tempfile.mkdtemp(prefix="lasso_pipeline_"))
@@ -87,13 +89,14 @@ class PipelineService:
             top_n_mean=5,
             ranking_config=ranking_config,
             ranker_predictor=ranker_predictor,
+            filter_lasso_only=filter_lasso_only,
         )
         
         # Create flat dataframe for display
         rows = []
         for res in results:
             for cand in res.candidates:
-                score = cand.embedding_score if cand.embedding_score is not None else cand.combined_score
+                score = cand.embedding_score if cand.embedding_score is not None else cand.best_similarity
                 rows.append({
                     "Record": cand.record_id,
                     "Candidate": cand.candidate_id,

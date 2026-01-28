@@ -48,6 +48,18 @@ class GeneInstance:
     remainder: str
 
 
+@dataclass
+class WindowInstance:
+    rel_start: int
+    rel_end: int
+    gene_strand: str
+    codons: List[str]
+    aas: List[str]
+    remainder: str
+    cds_len: int
+    window_seq: str
+
+
 @dataclass(frozen=True)
 class LocusKey:
     gene_name: str
@@ -158,17 +170,56 @@ def _window_from_bins(gene_start: int, gene_end: int, bin_start: int, bin_end: i
     return start, end
 
 
-def _translate_window(window_seq: str, orf_strand: str, orf_frame: int) -> str:
+def _prepare_locus_windows(
+    locus: LocusKey,
+    gene_instances: Sequence[GeneInstance],
+    geom_bins: int,
+) -> List[WindowInstance]:
+    windows: List[WindowInstance] = []
+    for inst in gene_instances:
+        window_start, window_end = _window_from_bins(
+            inst.gene_start,
+            inst.gene_end,
+            locus.bin_start,
+            locus.bin_end,
+            geom_bins,
+        )
+        if window_end <= window_start:
+            continue
+        rel_start = window_start - inst.gene_start
+        rel_end = window_end - inst.gene_start
+        if rel_start < 0 or rel_end > inst.gene_len:
+            continue
+        window_seq = inst.gene_genomic[rel_start:rel_end]
+        cds_len = len(inst.codons) * 3 + len(inst.remainder)
+        windows.append(
+            WindowInstance(
+                rel_start=rel_start,
+                rel_end=rel_end,
+                gene_strand=inst.gene_strand,
+                codons=inst.codons,
+                aas=inst.aas,
+                remainder=inst.remainder,
+                cds_len=cds_len,
+                window_seq=window_seq,
+            )
+        )
+    return windows
+
+
+def _frame_offset(orf_frame: int, orf_strand: str, frame_mode: str) -> int:
+    if orf_strand == "-":
+        return (abs(int(orf_frame)) - 1) % 3
+    if frame_mode == "one":
+        return (abs(int(orf_frame)) - 1) % 3
+    return int(orf_frame) % 3
+
+
+def _translate_window(window_seq: str, orf_strand: str, orf_frame: int, frame_mode: str) -> str:
     seq = window_seq
     if orf_strand == "-":
         seq = _reverse_complement(seq)
-        frame_offset = abs(int(orf_frame)) - 1
-    else:
-        if orf_frame < 0:
-            frame_offset = abs(int(orf_frame)) - 1
-        else:
-            frame_offset = int(orf_frame)
-    frame_offset = frame_offset % 3
+    frame_offset = _frame_offset(orf_frame, orf_strand, frame_mode)
     if frame_offset:
         seq = seq[frame_offset:]
     if len(seq) < 3:
@@ -189,6 +240,8 @@ def _shuffle_synonymous_codons(codons: Sequence[str], aas: Sequence[str], rng: r
     aa_to_positions: Dict[str, List[int]] = defaultdict(list)
     aa_to_codons: Dict[str, List[str]] = defaultdict(list)
     for idx, (codon, aa) in enumerate(zip(codons, aas)):
+        if idx == 0:
+            continue
         if aa == "X":
             continue
         aa_to_positions[aa].append(idx)
@@ -214,14 +267,19 @@ def _p_value(count_ge: int, n: int) -> float:
 def _scan_hits_for_loci(
     hits_path: Path,
     geom_bins: int,
-) -> Tuple[Dict[LocusKey, int], Dict[LocusKey, int]]:
-    unique_counts: Dict[LocusKey, int] = {}
-    last_seen: Dict[LocusKey, str] = {}
+    allowed_hashes: Optional[set[str]] = None,
+) -> Tuple[Dict[LocusKey, int], Dict[LocusKey, int], set[int]]:
+    seen_uids: Dict[LocusKey, set[str]] = defaultdict(set)
     hit_counts: Dict[LocusKey, int] = defaultdict(int)
+    frame_values: set[int] = set()
 
     with hits_path.open() as handle:
         reader = csv.DictReader(handle, delimiter="\t")
         for row in reader:
+            seq_hash = row.get("seq_hash")
+            if allowed_hashes is not None:
+                if not seq_hash or seq_hash not in allowed_hashes:
+                    continue
             try:
                 gene_start = int(row["gene_start"])
                 gene_end = int(row["gene_end"])
@@ -233,21 +291,45 @@ def _scan_hits_for_loci(
             if not bins:
                 continue
             bin_start, bin_end = bins
+            orf_frame = int(row["orf_frame"])
             key = LocusKey(
                 gene_name=row["gene_name"],
                 match_type=row["match_type"],
                 orf_strand=row["orf_strand"],
-                orf_frame=int(row["orf_frame"]),
+                orf_frame=orf_frame,
                 bin_start=bin_start,
                 bin_end=bin_end,
             )
             record_uid = f"{row['gbk_file']}::{row['record_id']}"
             hit_counts[key] += 1
-            if last_seen.get(key) != record_uid:
-                last_seen[key] = record_uid
-                unique_counts[key] = unique_counts.get(key, 0) + 1
+            seen_uids[key].add(record_uid)
+            frame_values.add(orf_frame)
 
-    return unique_counts, hit_counts
+    unique_counts = {k: len(v) for k, v in seen_uids.items()}
+    return unique_counts, hit_counts, frame_values
+
+
+def _load_esm_allowlist(path: Path, top_n: int, score_mode: str) -> set[str]:
+    df = pd.read_csv(path, sep="\t")
+    if df.empty:
+        return set()
+    if "seq_hash" in df.columns:
+        hash_col = "seq_hash"
+    elif "seq_hash_x" in df.columns:
+        hash_col = "seq_hash_x"
+    elif "seq_hash_y" in df.columns:
+        hash_col = "seq_hash_y"
+    elif "candidate_id" in df.columns:
+        hash_col = "candidate_id"
+        df[hash_col] = df[hash_col].astype(str).str.replace("altframe|hash=", "", regex=False)
+    else:
+        return set()
+    score_col = "top_n_mean_similarity" if score_mode == "top_n_mean" else "best_similarity"
+    if top_n and score_col in df.columns:
+        df = df.sort_values(score_col, ascending=False).head(top_n)
+    elif top_n:
+        raise ValueError(f"Score column {score_col} not found in {path}")
+    return set(df[hash_col].dropna().astype(str).tolist())
 
 
 def _select_top_loci(
@@ -337,30 +419,16 @@ def _extract_gene_instances(
 
 def _observed_for_locus(
     locus: LocusKey,
-    gene_instances: Sequence[GeneInstance],
-    geom_bins: int,
+    windows: Sequence[WindowInstance],
+    frame_mode: str,
 ) -> Tuple[float, float, int, int, List[str]]:
     peptides: List[str] = []
     total = 0
     survived = 0
 
-    for inst in gene_instances:
-        window_start, window_end = _window_from_bins(
-            inst.gene_start,
-            inst.gene_end,
-            locus.bin_start,
-            locus.bin_end,
-            geom_bins,
-        )
-        if window_end <= window_start:
-            continue
+    for window in windows:
         total += 1
-        rel_start = window_start - inst.gene_start
-        rel_end = window_end - inst.gene_start
-        if rel_start < 0 or rel_end > inst.gene_len:
-            continue
-        window_seq = inst.gene_genomic[rel_start:rel_end]
-        peptide = _translate_window(window_seq, locus.orf_strand, locus.orf_frame)
+        peptide = _translate_window(window.window_seq, locus.orf_strand, locus.orf_frame, frame_mode)
         if not peptide or "*" in peptide:
             continue
         survived += 1
@@ -373,10 +441,10 @@ def _observed_for_locus(
 
 def _null_for_locus(
     locus: LocusKey,
-    gene_instances: Sequence[GeneInstance],
-    geom_bins: int,
+    windows: Sequence[WindowInstance],
     rng: random.Random,
     iterations: int,
+    frame_mode: str,
 ) -> Tuple[List[float], List[float]]:
     survival_scores: List[float] = []
     identity_scores: List[float] = []
@@ -385,29 +453,16 @@ def _null_for_locus(
         peptides: List[str] = []
         total = 0
         survived = 0
-        for inst in gene_instances:
-            window_start, window_end = _window_from_bins(
-                inst.gene_start,
-                inst.gene_end,
-                locus.bin_start,
-                locus.bin_end,
-                geom_bins,
-            )
-            if window_end <= window_start:
-                continue
-            shuffled_codons = _shuffle_synonymous_codons(inst.codons, inst.aas, rng)
-            shuffled_cds = "".join(shuffled_codons) + inst.remainder
-            if inst.gene_strand == "+":
-                shuffled_genomic = shuffled_cds
-            else:
-                shuffled_genomic = _reverse_complement(shuffled_cds)
+        for window in windows:
             total += 1
-            rel_start = window_start - inst.gene_start
-            rel_end = window_end - inst.gene_start
-            if rel_start < 0 or rel_end > len(shuffled_genomic):
-                continue
-            window_seq = shuffled_genomic[rel_start:rel_end]
-            peptide = _translate_window(window_seq, locus.orf_strand, locus.orf_frame)
+            shuffled_codons = _shuffle_synonymous_codons(window.codons, window.aas, rng)
+            shuffled_cds = "".join(shuffled_codons) + window.remainder
+            if window.gene_strand == "+":
+                window_seq = shuffled_cds[window.rel_start:window.rel_end]
+            else:
+                seg = shuffled_cds[window.cds_len - window.rel_end : window.cds_len - window.rel_start]
+                window_seq = _reverse_complement(seg)
+            peptide = _translate_window(window_seq, locus.orf_strand, locus.orf_frame, frame_mode)
             if not peptide or "*" in peptide:
                 continue
             survived += 1
@@ -434,6 +489,20 @@ def main() -> int:
     parser.add_argument("--gbk-dir", type=Path, default=Path("data/antismash_lasso/gbk"))
     parser.add_argument("--hits-file", type=Path, default=None)
     parser.add_argument("--gene-field", choices=["gene", "locus_tag", "product", "any"], default="gene")
+    parser.add_argument(
+        "--frame-mode",
+        choices=["auto", "zero", "one"],
+        default="auto",
+        help="Frame numbering convention: zero=0/1/2, one=1/2/3. auto infers from hits.",
+    )
+    parser.add_argument("--esm-scores", type=Path, default=None, help="Optional altframe embedding scores TSV.")
+    parser.add_argument("--esm-top-n", type=int, default=0, help="Keep top N seq_hashes by ESM score.")
+    parser.add_argument(
+        "--esm-score-mode",
+        choices=["top_n_mean", "best_similarity"],
+        default="top_n_mean",
+        help="Score column used for ESM top-N filtering.",
+    )
     parser.add_argument("--output-dir", type=Path, default=Path("results/altframe_constraint_tests"))
     args = parser.parse_args()
 
@@ -444,10 +513,34 @@ def main() -> int:
         logger.error("Hits file not found: %s", hits_path)
         return 2
 
-    unique_counts, hit_counts = _scan_hits_for_loci(hits_path, args.geom_bins)
+    allowed_hashes: Optional[set[str]] = None
+    if args.esm_scores:
+        allowed_hashes = _load_esm_allowlist(args.esm_scores, args.esm_top_n, args.esm_score_mode)
+        if not allowed_hashes:
+            logger.error("No seq_hashes loaded from ESM scores: %s", args.esm_scores)
+            return 2
+        logger.info("ESM allowlist: %d seq_hashes", len(allowed_hashes))
+
+    unique_counts, hit_counts, frame_values = _scan_hits_for_loci(
+        hits_path,
+        args.geom_bins,
+        allowed_hashes,
+    )
     if not unique_counts:
         logger.error("No loci found in hits file.")
         return 2
+
+    if args.frame_mode == "auto":
+        if 0 in frame_values:
+            frame_mode = "zero"
+        elif 3 in frame_values:
+            frame_mode = "one"
+        else:
+            frame_mode = "zero"
+            logger.warning("Frame mode auto: no 0/+3 observed; defaulting to zero-based.")
+    else:
+        frame_mode = args.frame_mode
+    logger.info("Using frame mode: %s", frame_mode)
 
     loci = _select_top_loci(unique_counts, hit_counts, args.min_genomes, args.max_candidates)
     if not loci:
@@ -465,21 +558,27 @@ def main() -> int:
     rng = random.Random(args.seed)
 
     rows: List[dict] = []
-    for locus in loci:
+    total_loci = len(loci)
+    for idx, locus in enumerate(loci, start=1):
+        if idx == 1 or idx % 10 == 0 or idx == total_loci:
+            logger.info("Processing locus %d/%d (%s)", idx, total_loci, locus.gene_name)
         instances = gene_instances.get(locus.gene_name, [])
         if not instances:
             continue
+        windows = _prepare_locus_windows(locus, instances, args.geom_bins)
+        if not windows:
+            continue
         obs_survival, obs_identity, total, survived, _ = _observed_for_locus(
             locus,
-            instances,
-            args.geom_bins,
+            windows,
+            frame_mode,
         )
         null_survival, null_identity = _null_for_locus(
             locus,
-            instances,
-            args.geom_bins,
+            windows,
             rng,
             args.null_iterations,
+            frame_mode,
         )
 
         null_survival_mean = float(sum(null_survival) / len(null_survival)) if null_survival else float("nan")

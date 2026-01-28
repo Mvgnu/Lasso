@@ -1,0 +1,20 @@
+{
+  "gbks_total": 1869,
+  "loci_total": 259,
+  "loci_with_validated_precursor": 255,
+  "loci_evaluated": 255,
+  "topk": {
+    "top1": 0.24705882352941178,
+    "top5": 0.2980392156862745,
+    "top10": 0.40784313725490196,
+    "top50": 0.6588235294117647
+  },
+  "candidate_count": {
+    "mean": 926.1803921568627,
+    "median": 974.0,
+    "min": 26,
+    "max": 2002
+  },
+  "model_name": "facebook/esm2_t30_150M_UR50D",
+  "device": "mps"
+}
