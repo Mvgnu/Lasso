@@ -3,7 +3,7 @@ from lasso_workbench.altframe.binning import compute_bins, window_from_bins
 
 def test_compute_bins_basic():
     result = compute_bins(1000, 2000, 1150, 1600, 20)
-    assert result == (3, 12)
+    assert result == (3, 11)
 
 
 def test_compute_bins_no_overlap():
@@ -32,7 +32,19 @@ def test_window_from_bins_roundtrip_includes_original():
     bins = 20
     window_start, window_end = window_from_bins(gene_start, gene_end, bin_start, bin_end, bins)
     roundtrip = compute_bins(gene_start, gene_end, window_start, window_end, bins)
-    assert roundtrip is not None
-    new_bin_start, new_bin_end = roundtrip
-    assert new_bin_start == bin_start
-    assert new_bin_end >= bin_end
+    assert roundtrip == (bin_start, bin_end)
+
+
+def test_window_roundtrip_randomized():
+    import random
+
+    rng = random.Random(0)
+    for _ in range(50):
+        gene_start = 0
+        gene_end = rng.randint(50, 2000)
+        bins = rng.randint(5, 50)
+        bin_start = rng.randint(0, bins - 1)
+        bin_end = rng.randint(bin_start, bins - 1)
+        window_start, window_end = window_from_bins(gene_start, gene_end, bin_start, bin_end, bins)
+        roundtrip = compute_bins(gene_start, gene_end, window_start, window_end, bins)
+        assert roundtrip == (bin_start, bin_end)

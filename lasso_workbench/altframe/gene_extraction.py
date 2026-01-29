@@ -122,6 +122,12 @@ def extract_gene_instances(
                     else:
                         continue
                     qualifiers = feat.qualifiers or {}
+                    try:
+                        codon_start = int(qualifiers.get("codon_start", ["1"])[0])
+                    except (TypeError, ValueError, IndexError):
+                        codon_start = 1
+                    if codon_start not in (1, 2, 3):
+                        codon_start = 1
                     fields = collect_fields(qualifiers)
                     gene_name = select_gene_name(fields, gene_field)
                     if not gene_name or gene_name not in gene_names:
@@ -136,10 +142,13 @@ def extract_gene_instances(
                     if not gene_genomic:
                         continue
                     cds_seq = gene_genomic if strand == "+" else str(Seq(gene_genomic).reverse_complement())
-                    codon_count = len(cds_seq) // 3
-                    codons = [cds_seq[i:i + 3] for i in range(0, codon_count * 3, 3)]
+                    cds_offset = codon_start - 1
+                    cds_prefix = cds_seq[:cds_offset]
+                    cds_body = cds_seq[cds_offset:]
+                    codon_count = len(cds_body) // 3
+                    codons = [cds_body[i:i + 3] for i in range(0, codon_count * 3, 3)]
                     aas = [codon_to_aa.get(codon, "X") for codon in codons]
-                    remainder = cds_seq[codon_count * 3:]
+                    remainder = cds_body[codon_count * 3:]
 
                     instances[gene_name].append(
                         GeneInstance(
@@ -152,6 +161,7 @@ def extract_gene_instances(
                             gene_strand=strand,
                             gene_len=end - start,
                             gene_genomic=gene_genomic,
+                            cds_prefix=cds_prefix,
                             codons=codons,
                             aas=aas,
                             remainder=remainder,

@@ -40,3 +40,22 @@ def test_shuffle_preserves_first_position_even_with_synonyms():
     aas = ["V", "V", "V", "V"]
     shuffled = shuffle_synonymous_codons(codons, aas, rng)
     assert shuffled[0] == "GTG"
+
+
+def test_shuffle_preserves_per_aa_codons():
+    rng = random.Random(9)
+    codons = ["ATG", "CTG", "TTA", "TCT", "AGC", "CGT", "AGA"]
+    aas = ["M", "L", "L", "S", "S", "R", "R"]
+    shuffled = shuffle_synonymous_codons(codons, aas, rng)
+
+    per_aa_before = {
+        "L": sorted([codons[1], codons[2]]),
+        "S": sorted([codons[3], codons[4]]),
+        "R": sorted([codons[5], codons[6]]),
+    }
+    per_aa_after = {
+        "L": sorted([shuffled[1], shuffled[2]]),
+        "S": sorted([shuffled[3], shuffled[4]]),
+        "R": sorted([shuffled[5], shuffled[6]]),
+    }
+    assert per_aa_before == per_aa_after

@@ -35,8 +35,12 @@ def main() -> int:
     parser.add_argument(
         "--frame-mode",
         choices=["auto", "zero", "one"],
-        default="auto",
-        help="Frame numbering convention: zero=0/1/2, one=1/2/3. auto infers from hits.",
+        default="zero",
+        help=(
+            "Frame numbering convention. Canonical pipeline frames are "
+            "zero=+0/+1/+2 and -1/-2/-3. Use one=+1/+2/+3 only for legacy hits. "
+            "auto infers from hits."
+        ),
     )
     parser.add_argument("--output-dir", type=Path, default=Path("results/altframe_constraint_tests"))
     args = parser.parse_args()

@@ -19,8 +19,10 @@ def compute_bins(
     ov_end = min(gene_end, orf_end)
     if ov_end <= ov_start:
         return None
+    # Coordinates are 0-based, end-exclusive. Use the last covered base for bin_end.
+    last = ov_end - 1
     rel_start = (ov_start - gene_start) / gene_len
-    rel_end = (ov_end - gene_start) / gene_len
+    rel_end = (last - gene_start) / gene_len
     bin_start = int(rel_start * bins)
     bin_end = int(rel_end * bins)
     if bin_start < 0:
@@ -73,16 +75,16 @@ def prepare_locus_windows(
         if rel_start < 0 or rel_end > inst.gene_len:
             continue
         window_seq = inst.gene_genomic[rel_start:rel_end]
-        cds_len = len(inst.codons) * 3 + len(inst.remainder)
         windows.append(
             WindowInstance(
                 rel_start=rel_start,
                 rel_end=rel_end,
                 gene_strand=inst.gene_strand,
+                cds_prefix=inst.cds_prefix,
                 codons=inst.codons,
                 aas=inst.aas,
                 remainder=inst.remainder,
-                cds_len=cds_len,
+                cds_len=inst.gene_len,
                 window_seq=window_seq,
             )
         )

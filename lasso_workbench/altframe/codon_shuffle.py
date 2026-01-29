@@ -60,7 +60,7 @@ def null_for_locus(
         for window in windows:
             total += 1
             shuffled_codons = shuffle_synonymous_codons(window.codons, window.aas, rng)
-            shuffled_cds = "".join(shuffled_codons) + window.remainder
+            shuffled_cds = window.cds_prefix + "".join(shuffled_codons) + window.remainder
             if window.gene_strand == "+":
                 window_seq = shuffled_cds[window.rel_start:window.rel_end]
             else:

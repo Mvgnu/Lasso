@@ -44,7 +44,7 @@ def test_cli_smoke(tmp_path, monkeypatch):
                 "testGene",
                 "out_of_frame",
                 "+",
-                "0",
+                "1",
                 "0",
                 str(len(seq)),
                 "0",

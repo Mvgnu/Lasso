@@ -48,6 +48,17 @@ def test_translate_window_reverse_strand_frame_offset():
     assert pep == "GNF"
 
 
+def test_translate_window_terminal_stop_removed():
+    seq = "ATGAAATAA"
+    pep = translate_window(seq, "+", 0, "zero")
+    assert pep == "MK"
+
+
+def test_translate_window_internal_stop_preserved():
+    seq = "ATGTAAATG"
+    pep = translate_window(seq, "+", 0, "zero")
+    assert "*" in pep
+
 def test_p_value_basic():
     assert p_value(1, 3) == 0.5
 

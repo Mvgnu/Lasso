@@ -22,6 +22,19 @@ exceeds what is expected from synonymous codon variation in the primary CDS.
   - z-score and p-values
 
 ## Core Concepts
+### Coordinate convention
+All coordinates are **0-based, end-exclusive** (`[start, end)`), matching
+Biopython `FeatureLocation` and Python slicing. Bin assignment uses the last
+covered base (`end - 1`) for `bin_end`.
+
+### Frame convention
+Canonical frame numbering matches the pipeline:
+- Forward strand: `0/1/2`
+- Reverse strand: `-1/-2/-3`
+
+Use `--frame-mode one` only for legacy hits files that encode forward frames as
+`1/2/3`. `--frame-mode auto` will infer this, but `zero` is the default.
+
 ### Locus definition
 Each locus is keyed by:
 `(gene_name, match_type, orf_strand, orf_frame, bin_start, bin_end)`.
@@ -37,6 +50,8 @@ converted back into a window in gene-relative coordinates.
 For each genome, codons in the primary CDS are shuffled among synonymous
 positions (codon 0 fixed) to preserve amino acid sequence and per-AA codon
 multiset. The alt-frame peptide is recomputed from the same locus window.
+If a CDS has `codon_start` != 1, the prefix bases are preserved and only the
+in-frame codons are shuffled.
 
 ## Module Map
 - `models.py`: `GeneInstance`, `WindowInstance`, `LocusKey`

@@ -15,6 +15,7 @@ class GeneInstance:
     gene_strand: str
     gene_len: int
     gene_genomic: str  # genomic orientation, length = gene_len
+    cds_prefix: str
     codons: List[str]  # CDS orientation
     aas: List[str]
     remainder: str
@@ -25,6 +26,7 @@ class WindowInstance:
     rel_start: int
     rel_end: int
     gene_strand: str
+    cds_prefix: str
     codons: List[str]
     aas: List[str]
     remainder: str
