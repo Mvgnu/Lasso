@@ -5,7 +5,7 @@ from Bio.Seq import Seq
 from Bio.SeqFeature import FeatureLocation, SeqFeature
 from Bio.SeqRecord import SeqRecord
 
-from lasso_workbench.altframe import cli
+from lasso_workbench.altframe.experimental.constraint_conservation import cli
 
 
 def test_cli_smoke(tmp_path, monkeypatch):

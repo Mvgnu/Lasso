@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Optional, Sequence, Tuple
 
-from lasso_workbench.altframe.models import GeneInstance, LocusKey, WindowInstance
+from lasso_workbench.altframe.experimental.constraint_conservation.models import GeneInstance, LocusKey, WindowInstance
 
 
 def compute_bins(
@@ -41,10 +41,9 @@ def window_from_bins(gene_start: int, gene_end: int, bin_start: int, bin_end: in
     gene_len = gene_end - gene_start
     if gene_len <= 0:
         return gene_start, gene_start
-    start_frac = bin_start / bins
-    end_frac = (bin_end + 1) / bins
-    start = gene_start + int(start_frac * gene_len)
-    end = gene_start + int(end_frac * gene_len)
+    # Use ceil to ensure round-trip with compute_bins under end-exclusive coords.
+    start = gene_start + ((bin_start * gene_len + bins - 1) // bins)
+    end = gene_start + (((bin_end + 1) * gene_len + bins - 1) // bins)
     if end <= start:
         return gene_start, gene_start
     if start < gene_start:

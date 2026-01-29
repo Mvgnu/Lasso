@@ -1,6 +1,6 @@
 import math
 
-from lasso_workbench.altframe.conservation import (
+from lasso_workbench.altframe.experimental.constraint_conservation.conservation import (
     mean_pairwise_identity,
     p_value,
     summarize_null,

@@ -1,6 +1,6 @@
 import random
 
-from lasso_workbench.altframe.codon_shuffle import shuffle_synonymous_codons, synonym_maps
+from lasso_workbench.altframe.experimental.constraint_conservation.codon_shuffle import shuffle_synonymous_codons, synonym_maps
 
 
 def test_shuffle_preserves_start_and_multiset():

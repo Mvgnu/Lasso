@@ -1162,6 +1162,7 @@ function renderCandidateList(candidates, bgcIdx) {{
                 <div class="candidate-sequence">${{escapeHtml(c.protein_sequence)}}</div>
                 <div class="candidate-meta">
                     <span>${{c.aa_length || '?'}} aa</span>
+                    ${{c.genome_count !== null && c.genome_count !== undefined ? `<span>found in ${{formatNumber(c.genome_count)}} genomes</span>` : ''}}
                     <span>${{formatNumber(c.genomic_start || 0)}} - ${{formatNumber(c.genomic_end || 0)}}</span>
                     <span>${{c.strand === 1 ? '+' : '-'}} strand</span>
                     ${{frameTag !== 'unk' ? `<span>frame ${{frameTag}}</span>` : ''}}
@@ -1363,6 +1364,7 @@ function showTooltip(event, type, element) {{
             <div class="tooltip-row"><span class="tooltip-label">Type:</span> ${{isKnown ? 'Known precursor' : 'Novel candidate'}}</div>
             <div class="tooltip-row"><span class="tooltip-label">Score:</span> ${{(data.embedding_score || data.top_n_mean_similarity || data.best_similarity || 0).toFixed(4)}}</div>
             <div class="tooltip-row"><span class="tooltip-label">Length:</span> ${{data.aa_length}} aa</div>
+            ${{data.genome_count !== null && data.genome_count !== undefined ? `<div class="tooltip-row"><span class="tooltip-label">Genomes:</span> ${{formatNumber(data.genome_count)}}</div>` : ''}}
             <div class="tooltip-row"><span class="tooltip-label">Location:</span> ${{formatNumber(data.genomic_start)}} - ${{formatNumber(data.genomic_end)}}</div>
             ${{data.best_match_id ? `<div class="tooltip-row"><span class="tooltip-label">Best match:</span> ${{escapeHtml(data.best_match_id)}}</div>` : ''}}
             <div class="tooltip-sequence">${{escapeHtml(data.protein_sequence)}}</div>

@@ -5,6 +5,7 @@ scratch/
 build/
 alt_frame_conservation/
 results/alt_frame_conservation/
+results/lasso_orf_index.sqlite
 
 
 # Python

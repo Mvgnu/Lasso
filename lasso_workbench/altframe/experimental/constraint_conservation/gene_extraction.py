@@ -9,9 +9,9 @@ from typing import Dict, List, Optional, Sequence, Tuple
 from Bio import SeqIO
 from Bio.Seq import Seq
 
-from lasso_workbench.altframe.binning import compute_bins
-from lasso_workbench.altframe.codon_shuffle import synonym_maps
-from lasso_workbench.altframe.models import GeneInstance, LocusKey
+from lasso_workbench.altframe.experimental.constraint_conservation.binning import compute_bins
+from lasso_workbench.altframe.experimental.constraint_conservation.codon_shuffle import synonym_maps
+from lasso_workbench.altframe.experimental.constraint_conservation.models import GeneInstance, LocusKey
 
 logger = logging.getLogger(__name__)
 

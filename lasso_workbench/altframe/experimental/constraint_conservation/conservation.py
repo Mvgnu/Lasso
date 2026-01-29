@@ -5,7 +5,7 @@ from typing import List, Sequence, Tuple
 
 from Bio.Seq import Seq
 
-from lasso_workbench.altframe.models import LocusKey, WindowInstance
+from lasso_workbench.altframe.experimental.constraint_conservation.models import LocusKey, WindowInstance
 from lasso_workbench.utils.translation import translate_bacterial
 
 

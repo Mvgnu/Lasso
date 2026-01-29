@@ -1,4 +1,4 @@
-from lasso_workbench.altframe.binning import compute_bins, window_from_bins
+from lasso_workbench.altframe.experimental.constraint_conservation.binning import compute_bins, window_from_bins
 
 
 def test_compute_bins_basic():

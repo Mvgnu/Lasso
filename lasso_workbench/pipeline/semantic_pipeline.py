@@ -398,6 +398,7 @@ def results_to_json(results: List[PipelineResult]) -> List[Dict]:
         "is_known_precursor",
         "rule_orientation",
         "rule_score_raw",
+        "genome_count",
     }
 
     cds_fields = {
@@ -473,6 +474,7 @@ def results_to_dataframe(results: List[PipelineResult]) -> pd.DataFrame:
         "embedding_score",
         "is_known_precursor",
         "rule_orientation",
+        "genome_count",
     ]
     return df.loc[:, [c for c in columns if c in df.columns]]
 
@@ -497,6 +499,7 @@ def run_semantic_pipeline(
     ranker_predictor: Optional[CorePredictor] = None,
     segments: Optional[List[BGCSegment]] = None,
     filter_lasso_only: bool = False,
+    orf_index_db: Optional[Path] = None,
 ) -> Tuple[List[PipelineResult], pd.DataFrame]:
     """
     Run the full semantic precursor discovery pipeline.
@@ -606,6 +609,19 @@ def run_semantic_pipeline(
     )
 
     emit("Built results")
+
+    db_path = orf_index_db or Path("results/lasso_orf_index.sqlite")
+    if db_path.exists():
+        from lasso_workbench.altframe.indexer import lookup_genome_counts
+
+        sequences = {cand.protein_sequence for res in results for cand in res.candidates}
+        genome_counts = lookup_genome_counts(db_path, list(sequences))
+        for res in results:
+            for cand in res.candidates:
+                cand.genome_count = genome_counts.get(cand.protein_sequence, 0)
+        emit(f"Attached genome counts from {db_path}")
+    else:
+        emit(f"No ORF index found at {db_path}; skipping genome count annotation")
     
     # Step 5: Export results
     emit("[5/6] Exporting TSV/JSON outputs")

@@ -3,7 +3,7 @@ from Bio.Seq import Seq
 from Bio.SeqFeature import FeatureLocation, SeqFeature
 from Bio.SeqRecord import SeqRecord
 
-from lasso_workbench.altframe.gene_extraction import extract_gene_instances
+from lasso_workbench.altframe.experimental.constraint_conservation.gene_extraction import extract_gene_instances
 
 
 def test_extract_gene_instances_from_gbk(tmp_path):

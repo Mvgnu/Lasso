@@ -9,10 +9,10 @@ from typing import List
 
 import pandas as pd
 
-from lasso_workbench.altframe.binning import prepare_locus_windows
-from lasso_workbench.altframe.codon_shuffle import null_for_locus
-from lasso_workbench.altframe.conservation import observed_for_locus, p_value, summarize_null
-from lasso_workbench.altframe.gene_extraction import (
+from lasso_workbench.altframe.experimental.constraint_conservation.binning import prepare_locus_windows
+from lasso_workbench.altframe.experimental.constraint_conservation.codon_shuffle import null_for_locus
+from lasso_workbench.altframe.experimental.constraint_conservation.conservation import observed_for_locus, p_value, summarize_null
+from lasso_workbench.altframe.experimental.constraint_conservation.gene_extraction import (
     extract_gene_instances,
     scan_hits_for_loci,
     select_top_loci,
@@ -31,6 +31,18 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=13)
     parser.add_argument("--gbk-dir", type=Path, default=Path("data/antismash_lasso/gbk"))
     parser.add_argument("--hits-file", type=Path, default=None)
+    parser.add_argument(
+        "--loci-file",
+        type=Path,
+        default=None,
+        help="Optional TSV of loci to re-score (e.g., a previous output file).",
+    )
+    parser.add_argument(
+        "--loci-limit",
+        type=int,
+        default=None,
+        help="Optional limit on number of loci loaded from --loci-file.",
+    )
     parser.add_argument("--gene-field", choices=["gene", "locus_tag", "product", "any"], default="gene")
     parser.add_argument(
         "--frame-mode",
@@ -48,17 +60,53 @@ def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
     hits_path = args.hits_file or (args.altframe_dir / "alt_frame_hits.tsv")
-    if not hits_path.exists():
-        logger.error("Hits file not found: %s", hits_path)
-        return 2
 
-    unique_counts, hit_counts, frame_values = scan_hits_for_loci(
-        hits_path,
-        args.geom_bins,
-    )
-    if not unique_counts:
-        logger.error("No loci found in hits file.")
-        return 2
+    loci: List[LocusKey] = []
+    frame_values: set[int] = set()
+    unique_counts = {}
+    hit_counts = {}
+
+    if args.loci_file:
+        if not args.loci_file.exists():
+            logger.error("Loci file not found: %s", args.loci_file)
+            return 2
+        loci_df = pd.read_csv(args.loci_file, sep="\t")
+        required = {"gene_name", "match_type", "orf_strand", "orf_frame", "bin_start", "bin_end"}
+        missing = required - set(loci_df.columns)
+        if missing:
+            logger.error("Loci file missing required columns: %s", ", ".join(sorted(missing)))
+            return 2
+        if "z_score" in loci_df.columns:
+            loci_df = loci_df.sort_values("z_score", ascending=False)
+        if args.loci_limit:
+            loci_df = loci_df.head(args.loci_limit)
+        for _, row in loci_df.iterrows():
+            loci.append(
+                LocusKey(
+                    gene_name=str(row["gene_name"]),
+                    match_type=str(row["match_type"]),
+                    orf_strand=str(row["orf_strand"]),
+                    orf_frame=int(row["orf_frame"]),
+                    bin_start=int(row["bin_start"]),
+                    bin_end=int(row["bin_end"]),
+                )
+            )
+            frame_values.add(int(row["orf_frame"]))
+
+        if hits_path.exists():
+            unique_counts, hit_counts, _ = scan_hits_for_loci(hits_path, args.geom_bins)
+    else:
+        if not hits_path.exists():
+            logger.error("Hits file not found: %s", hits_path)
+            return 2
+
+        unique_counts, hit_counts, frame_values = scan_hits_for_loci(
+            hits_path,
+            args.geom_bins,
+        )
+        if not unique_counts:
+            logger.error("No loci found in hits file.")
+            return 2
 
     if args.frame_mode == "auto":
         if 0 in frame_values:
@@ -72,7 +120,8 @@ def main() -> int:
         frame_mode = args.frame_mode
     logger.info("Using frame mode: %s", frame_mode)
 
-    loci = select_top_loci(unique_counts, hit_counts, args.min_genomes, args.max_candidates)
+    if not loci:
+        loci = select_top_loci(unique_counts, hit_counts, args.min_genomes, args.max_candidates)
     if not loci:
         logger.error("No loci meet min-genomes filter.")
         return 2

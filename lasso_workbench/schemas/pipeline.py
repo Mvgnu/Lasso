@@ -122,6 +122,7 @@ class ScoredCandidate(BaseModel):
     combined_score: float = 0.0  # Final combined score used for ranking
     rule_score_raw: Optional[float] = None  # Raw rule-engine score
     rule_orientation: Optional[Literal["leader_core", "core_leader"]] = None
+    genome_count: Optional[int] = None
 
     @model_validator(mode="after")
     def _validate_lengths(self):

@@ -7,8 +7,8 @@ from typing import Dict, List, Sequence, Tuple
 
 from Bio.Data import CodonTable
 
-from lasso_workbench.altframe.conservation import mean_pairwise_identity, reverse_complement, translate_window
-from lasso_workbench.altframe.models import LocusKey, WindowInstance
+from lasso_workbench.altframe.experimental.constraint_conservation.conservation import mean_pairwise_identity, reverse_complement, translate_window
+from lasso_workbench.altframe.experimental.constraint_conservation.models import LocusKey, WindowInstance
 from lasso_workbench.utils.translation import BACTERIAL_CODON_TABLE
 
 
