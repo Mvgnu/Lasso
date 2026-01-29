@@ -71,6 +71,32 @@ Validated precursor reference sets live in `data/precursors/`.
 * `precursor_proteins_verified.faa` — merged, de‑duplicated set combining `multi_strict` + `curated`
 * `precursor_proteins_verified.tsv` — merged metadata table (read‑only; used by the Dataset tab)
 
+### Reference FASTA format (Pipeline + Bench UI)
+
+Any reference FASTA you drop into the Pipeline or Bench UI **must** include a `locus=` token
+in the header. This is required for grouped top‑N mean scoring.
+
+Minimal example:
+```
+>name=foo|locus=foo_001
+MSEQ...
+```
+
+Lasso benchmark (peptidase holdout) expects:
+```
+>pep=WP_012345678|locus=lab_0001_locus_01|case=lab_0001|orf=0001
+MSEQ...
+```
+
+Beta‑lactamase benchmark expects:
+```
+>prot=AAC09015|locus=AAC09015|name=AER-1|class=A|source=ambler_table
+MSEQ...
+```
+
+If `locus=` is missing, scoring will error with:
+`Missing locus= token in reference id`.
+
 ### Add new curated precursors
 
 Use the helper script to append curated sequences without touching generated files:

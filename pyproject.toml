@@ -18,5 +18,5 @@ where = ["."]
 "*" = ["*.json", "*.csv", "*.hmm", "*.html", "*.qss"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "lasso_workbench/altframe/tests"]
 addopts = "-v --cov=lasso_workbench --cov-report=term-missing"

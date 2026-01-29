@@ -52,6 +52,12 @@ Services are responsible for:
 - **I/O handling**: File reading/writing, format conversion
 - **Error handling**: User-friendly error messages
 
+## Data Boundaries
+
+- `data/precursors/*` is read-only from the UI except for `precursor_proteins_curated.tsv`.
+- Curated additions are done via `scripts/add_validated_precursors.py`.
+- Default precursor reference set in the UI is `data/precursors/precursor_proteins_verified.faa`.
+
 ## Constraints
 
 > [!WARNING]

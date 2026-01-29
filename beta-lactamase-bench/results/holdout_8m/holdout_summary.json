@@ -1,0 +1,20 @@
+{
+  "gbks_total": 4925,
+  "loci_total": 4,
+  "loci_with_validated_protein": 4,
+  "loci_evaluated": 4,
+  "topk": {
+    "top1": 1.0,
+    "top5": 1.0,
+    "top10": 1.0,
+    "top50": 1.0
+  },
+  "candidate_count": {
+    "mean": 414.75,
+    "median": 400.5,
+    "min": 395,
+    "max": 463
+  },
+  "model_name": "facebook/esm2_t6_8M_UR50D",
+  "device": "mps"
+}

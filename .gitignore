@@ -17,3 +17,7 @@ __pycache__/
 *.gbk
 *.fna
 _archive/
+
+
+#MacOS
+.DS_Store
