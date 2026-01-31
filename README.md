@@ -131,6 +131,79 @@ This updates:
 * `precursor_proteins_verified.faa` (merged set used by default)
 * `precursor_proteins_verified.tsv` (merged metadata table)
 
+## Alt‑Frame Switches (Experimental)
+
+Beyond precursor retrieval, the codebase includes an **experimental** alt‑frame conservation analysis.
+It looks for **alt‑frame ORFs overlapping annotated genes** that show unexpected conservation patterns.
+The current implementation lives in:
+
+```
+lasso_workbench/altframe/experimental/constraint_conservation
+```
+
+### The Null Model
+
+We anchor on **CDS position** (not ORF), bin the gene into regions, and ask:
+- **Survival:** does the alt‑frame avoid stop codons?
+- **Identity:** when it survives, is the peptide conserved?
+
+A codon‑preserving null shuffles synonymous codons while keeping the primary protein intact,
+then re‑checks alt‑frame survival and identity across permutations (default: 200).
+
+### Interpreting the stats (example row)
+
+Example **single locus** from `results/altframe_constraint_tests/altframe_constraint_conservation.tsv`
+(phnU, out_of_frame, +2, bin 0–0):
+
+| Metric | Observed | Null | Interpretation |
+|--------|----------|------|----------------|
+| Survival | ~47% | ~94.6% | lower than null → stops are favored |
+| Identity | ~69% | ~27% | higher than null → survivors are conserved |
+| Z‑score | 70 | — | very large separation |
+
+**Translation:** Some lineages appear to **turn the alt‑frame “OFF”** (introduce stops)
+while others keep it **highly conserved** (ON). This is compatible with a binary regulatory
+switch hypothesis, but the statistics are **null‑model‑dependent**.
+
+**Important:** p‑values in the TSV are *empirical* with a finite number of permutations
+(with 200 iterations, the minimum is ~0.005). Treat Z‑scores as effect sizes, not exact
+tail probabilities.
+
+### Cost heuristic
+
+`Low survival + High identity = High cost`
+
+This is a practical heuristic: a peptide that is costly to maintain will be absent in many
+genomes (OFF) but highly conserved when present (ON). It is **not** a formal likelihood.
+
+### Files
+
+- `results/altframe_constraint_tests/altframe_constraint_conservation.tsv`
+
+## Lasso ORF Index (Essence)
+
+The streamlined “essence” path is an ORF indexer that scans **only antiSMASH lasso regions**
+and stores **20–120 aa peptides** in a local SQLite database for fast conservation queries.
+
+Build the DB:
+
+```bash
+.venv/bin/python scripts/build_lasso_orf_db.py \
+  --gbk-dir data/antismash_lasso/gbk \
+  --db-path results/lasso_orf_index.sqlite \
+  --min-aa 20 \
+  --max-aa 120 \
+  --reset
+```
+
+The pipeline/UI will automatically attach `genome_count` (found‑in‑X‑genomes) to candidates
+when `results/lasso_orf_index.sqlite` exists.
+
+Spec reference:
+```
+lasso_workbench/altframe/specs/orf_indexer.md
+```
+
 ## LICENSE
 
 MIT License
