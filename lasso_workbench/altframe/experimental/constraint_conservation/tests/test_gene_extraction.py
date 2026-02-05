@@ -87,3 +87,27 @@ def test_extract_gene_instances_minus_strand(tmp_path):
     assert inst.gene_strand == "-"
     assert inst.gene_genomic == str(seq)
     assert inst.codons[:4] == ["CCC", "GGG", "TTT", "CAT"]
+
+
+def test_extract_gene_instances_keeps_same_name_paralogs(tmp_path):
+    seq = Seq("ATG" + "GCT" * 40 + "TAA")
+    record = SeqRecord(seq, id="TEST_PARALOG", name="TEST_PARALOG", description="")
+    record.annotations["molecule_type"] = "DNA"
+    feature_a = SeqFeature(
+        FeatureLocation(0, 30, strand=1),
+        type="CDS",
+        qualifiers={"gene": ["dupGene"]},
+    )
+    feature_b = SeqFeature(
+        FeatureLocation(30, 60, strand=1),
+        type="CDS",
+        qualifiers={"gene": ["dupGene"]},
+    )
+    record.features = [feature_a, feature_b]
+
+    gbk_path = tmp_path / "paralogs.gbk"
+    SeqIO.write(record, gbk_path, "genbank")
+
+    instances = extract_gene_instances(tmp_path, {"dupGene"}, "gene")
+    assert "dupGene" in instances
+    assert len(instances["dupGene"]) == 2

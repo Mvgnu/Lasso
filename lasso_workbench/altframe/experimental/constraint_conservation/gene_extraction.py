@@ -103,7 +103,7 @@ def extract_gene_instances(
 ) -> Dict[str, List[GeneInstance]]:
     _, codon_to_aa = synonym_maps()
     instances: Dict[str, List[GeneInstance]] = defaultdict(list)
-    seen: Dict[str, set[str]] = defaultdict(set)
+    seen_features: Dict[str, set[Tuple[str, int, int, str, int]]] = defaultdict(set)
 
     for gbk_path in sorted(gbk_dir.glob("*.gbk")):
         try:
@@ -132,11 +132,12 @@ def extract_gene_instances(
                     gene_name = select_gene_name(fields, gene_field)
                     if not gene_name or gene_name not in gene_names:
                         continue
-                    if record_uid in seen[gene_name]:
-                        continue
                     start = int(feat.location.start)
                     end = int(feat.location.end)
                     if end <= start:
+                        continue
+                    feature_key = (record_uid, start, end, strand, codon_start)
+                    if feature_key in seen_features[gene_name]:
                         continue
                     gene_genomic = seq[start:end]
                     if not gene_genomic:
@@ -167,7 +168,7 @@ def extract_gene_instances(
                             remainder=remainder,
                         )
                     )
-                    seen[gene_name].add(record_uid)
+                    seen_features[gene_name].add(feature_key)
         except Exception as exc:  # noqa: BLE001
             logger.warning("Failed parsing %s: %s", gbk_path, exc)
 

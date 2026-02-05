@@ -85,3 +85,59 @@ def test_cli_smoke(tmp_path, monkeypatch):
     header = contents[0].split("\t")
     assert "obs_survival" in header
     assert "null_survival_mean" in header
+    assert "hit_genomes" in header
+    assert "evaluated_instances" in header
+    assert "evaluated_records" in header
+
+
+def test_cli_with_loci_file(tmp_path, monkeypatch):
+    seq = Seq("ATG" + "GCT" * 15 + "TAA")
+    record = SeqRecord(seq, id="TEST_LOCUS", name="TEST_LOCUS", description="")
+    record.annotations["molecule_type"] = "DNA"
+    feature = SeqFeature(
+        FeatureLocation(0, len(seq), strand=1),
+        type="CDS",
+        qualifiers={"gene": ["testGene"]},
+    )
+    record.features = [feature]
+
+    gbk_path = tmp_path / "test_locus.gbk"
+    SeqIO.write(record, gbk_path, "genbank")
+
+    loci_file = tmp_path / "loci.tsv"
+    loci_file.write_text(
+        "\t".join(
+            [
+                "gene_name",
+                "match_type",
+                "orf_strand",
+                "orf_frame",
+                "bin_start",
+                "bin_end",
+            ]
+        )
+        + "\n"
+        + "\t".join(["testGene", "out_of_frame", "+", "0", "0", "9"])
+        + "\n"
+    )
+
+    out_dir = tmp_path / "out_loci"
+    argv = [
+        "prog",
+        "--gbk-dir",
+        str(tmp_path),
+        "--loci-file",
+        str(loci_file),
+        "--output-dir",
+        str(out_dir),
+        "--null-iterations",
+        "2",
+        "--geom-bins",
+        "10",
+    ]
+    monkeypatch.setattr(sys, "argv", argv)
+
+    result = cli.main()
+    assert result == 0
+    out_path = out_dir / "altframe_constraint_conservation.tsv"
+    assert out_path.exists()

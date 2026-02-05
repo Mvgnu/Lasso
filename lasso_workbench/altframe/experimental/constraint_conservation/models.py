@@ -23,6 +23,7 @@ class GeneInstance:
 
 @dataclass
 class WindowInstance:
+    record_uid: str
     rel_start: int
     rel_end: int
     gene_strand: str

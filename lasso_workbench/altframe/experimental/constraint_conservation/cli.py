@@ -17,6 +17,7 @@ from lasso_workbench.altframe.experimental.constraint_conservation.gene_extracti
     scan_hits_for_loci,
     select_top_loci,
 )
+from lasso_workbench.altframe.experimental.constraint_conservation.models import LocusKey
 
 logger = logging.getLogger(__name__)
 
@@ -152,6 +153,7 @@ def main() -> int:
             windows,
             frame_mode,
         )
+        evaluated_records = len({window.record_uid for window in windows})
         null_survival, null_identity = null_for_locus(
             locus,
             windows,
@@ -184,8 +186,14 @@ def main() -> int:
             "orf_frame": locus.orf_frame,
             "bin_start": locus.bin_start,
             "bin_end": locus.bin_end,
+            # Backward-compatible aliases retained:
             "genomes": unique_counts.get(locus, 0),
             "hits": hit_counts.get(locus, 0),
+            # Explicit accounting fields:
+            "hit_genomes": unique_counts.get(locus, 0),
+            "hit_events": hit_counts.get(locus, 0),
+            "evaluated_records": evaluated_records,
+            "evaluated_instances": total,
             "observed_n": total,
             "observed_survived": survived,
             "obs_survival": obs_survival,

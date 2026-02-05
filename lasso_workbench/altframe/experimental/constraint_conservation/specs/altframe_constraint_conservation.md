@@ -20,6 +20,9 @@ exceeds what is expected from synonymous codon variation in the primary CDS.
   - Observed survival/identity
   - Null mean/std for survival/identity
   - z-score and p-values
+  - Explicit count columns:
+    - `hit_genomes`, `hit_events`: counts derived from the hits file
+    - `evaluated_records`, `evaluated_instances`: counts used in observed/null scoring
 
 ## Core Concepts
 ### Coordinate convention
@@ -45,6 +48,11 @@ converted back into a window in gene-relative coordinates.
 ### Observed metrics
 - **Survival**: fraction of genomes where the alt-frame window has no stop codon.
 - **Identity**: mean pairwise identity among surviving peptides.
+
+Implementation note:
+- Scoring currently runs in **all-instances** mode for each selected locus key:
+  all extracted gene instances for that gene are evaluated, not only the original
+  hit rows. Use `evaluated_*` columns for denominator interpretation.
 
 ### Null model (synonymous shuffling)
 For each genome, codons in the primary CDS are shuffled among synonymous

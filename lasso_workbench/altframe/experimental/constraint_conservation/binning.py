@@ -76,6 +76,7 @@ def prepare_locus_windows(
         window_seq = inst.gene_genomic[rel_start:rel_end]
         windows.append(
             WindowInstance(
+                record_uid=inst.record_uid,
                 rel_start=rel_start,
                 rel_end=rel_end,
                 gene_strand=inst.gene_strand,
