@@ -39,6 +39,7 @@ def get_available_datasets() -> list:
 
 def create_dataset_tab(data_service: DataService):
     """Create the Dataset Manager tab."""
+    row_id_col = "__row_id__"
 
     def resolve_dataset_path(name: str) -> Path:
         if not name:
@@ -51,6 +52,17 @@ def create_dataset_tab(data_service: DataService):
             if cat == "precursors": return DATA_DIR / "precursors" / fname
         return DATA_DIR / "training" / name
 
+    def _with_row_ids(df: pd.DataFrame) -> pd.DataFrame:
+        if df is None or df.empty:
+            return pd.DataFrame(columns=[row_id_col])
+        view_df = df.copy()
+        view_df[row_id_col] = list(df.index)
+        ordered_cols = [row_id_col] + [c for c in view_df.columns if c != row_id_col]
+        return view_df.loc[:, ordered_cols]
+
+    def _view_df() -> pd.DataFrame:
+        return _with_row_ids(data_service.load_dataset())
+
     def load_handler(dataset_name):
         if not dataset_name:
             return "No dataset selected.", pd.DataFrame()
@@ -61,12 +73,13 @@ def create_dataset_tab(data_service: DataService):
         data_service.set_dataset_path(path)
         df = data_service.load_dataset()
         suffix = " (read-only)" if data_service.is_read_only() else ""
-        return f"Loaded **{dataset_name}** ({len(df)} entries){suffix}", df
+        return f"Loaded **{dataset_name}** ({len(df)} entries){suffix}", _with_row_ids(df)
 
     def filter_handler(query, source_filter):
         # Filtering happens in memory on loaded df
         df = data_service.load_dataset()
-        if df.empty: return df
+        if df.empty:
+            return _with_row_ids(df)
         
         if source_filter != "all" and "source" in df.columns:
             df = df[df["source"] == source_filter]
@@ -76,16 +89,16 @@ def create_dataset_tab(data_service: DataService):
             mask = df.apply(lambda row: any(q in str(val).lower() for val in row), axis=1)
             df = df[mask]
             
-        return df
+        return _with_row_ids(df)
 
     def refresh_handler():
-        return data_service.load_dataset()
+        return _view_df()
 
     def add_handler(name, precursor, leader, core, source):
         if not name or not precursor:
-            return "Name and Precursor are required.", data_service.load_dataset()
+            return "Name and Precursor are required.", _view_df()
         if data_service.is_read_only():
-            return "Dataset is read-only (use scripts/add_validated_precursors.py).", data_service.load_dataset()
+            return "Dataset is read-only (use scripts/add_validated_precursors.py).", _view_df()
         
         entry = {
             "name": name, 
@@ -97,15 +110,15 @@ def create_dataset_tab(data_service: DataService):
         }
         try:
             data_service.add_entry(entry)
-            return f"Added entry: {name}", data_service.load_dataset()
+            return f"Added entry: {name}", _view_df()
         except Exception as e:
-            return f"Error adding entry: {e}", data_service.load_dataset()
+            return f"Error adding entry: {e}", _view_df()
 
     def update_handler(idx_val, name, precursor, leader, core, source):
         if idx_val is None:
-            return "No entry selected.", data_service.load_dataset()
+            return "No entry selected.", _view_df()
         if data_service.is_read_only():
-            return "Dataset is read-only (use scripts/add_validated_precursors.py).", data_service.load_dataset()
+            return "Dataset is read-only (use scripts/add_validated_precursors.py).", _view_df()
         
         try:
             # idx_val comes from State, should be int
@@ -120,37 +133,37 @@ def create_dataset_tab(data_service: DataService):
             }
             success = data_service.update_entry(idx, updates)
             if success:
-                return f"Updated entry #{idx}", data_service.load_dataset()
+                return f"Updated entry #{idx}", _view_df()
             else:
-                return f"Failed to update entry #{idx}", data_service.load_dataset()
+                return f"Failed to update entry #{idx}", _view_df()
         except Exception as e:
-            return f"Error updating: {e}", data_service.load_dataset()
+            return f"Error updating: {e}", _view_df()
 
     def delete_handler(idx_val):
         if idx_val is None:
-             return "No entry selected.", data_service.load_dataset()
+             return "No entry selected.", _view_df()
         if data_service.is_read_only():
-            return "Dataset is read-only (use scripts/add_validated_precursors.py).", data_service.load_dataset()
+            return "Dataset is read-only (use scripts/add_validated_precursors.py).", _view_df()
         try:
             idx = int(idx_val)
             success = data_service.delete_entry(idx)
             if success:
-                return f"Deleted entry #{idx}", data_service.load_dataset()
+                return f"Deleted entry #{idx}", _view_df()
             else:
-                return f"Failed to delete entry #{idx}", data_service.load_dataset()
+                return f"Failed to delete entry #{idx}", _view_df()
         except Exception as e:
-            return f"Error deleting: {e}", data_service.load_dataset()
+            return f"Error deleting: {e}", _view_df()
 
     def import_handler(file_obj):
         if file_obj is None:
-            return "No file selected.", data_service.load_dataset()
+            return "No file selected.", _view_df()
         if data_service.is_read_only():
-            return "Dataset is read-only (use scripts/add_validated_precursors.py).", data_service.load_dataset()
+            return "Dataset is read-only (use scripts/add_validated_precursors.py).", _view_df()
         try:
             count = data_service.import_file(Path(file_obj.name))
-            return f"Imported {count} entries.", data_service.load_dataset()
+            return f"Imported {count} entries.", _view_df()
         except Exception as e:
-            return f"Import error: {e}", data_service.load_dataset()
+            return f"Import error: {e}", _view_df()
 
     def export_handler(fmt):
         # DataService saves to current path. Exporting to a download file requires copying or saving temp.
@@ -268,32 +281,21 @@ def create_dataset_tab(data_service: DataService):
         def on_select(evt: gr.SelectData, df):
             if evt is None or df is None or df.empty:
                 return None, "**Selected:** None", "", "lab", "", "", ""
-            row_idx = evt.index[0]
-            if row_idx >= len(df): return None, "**Selected:** None", "", "lab", "", "", ""
-            
-            # Use 'idx' column if available (stable id), else row_idx
+            row_idx = evt.index[0] if isinstance(evt.index, (list, tuple)) else int(evt.index)
+            if row_idx >= len(df):
+                return None, "**Selected:** None", "", "lab", "", "", ""
+
+            selected_row = df.iloc[row_idx]
             try:
-                actual_idx = int(df.iloc[row_idx]["idx"])
-            except:
+                actual_idx = int(selected_row.get(row_id_col, row_idx))
+            except (TypeError, ValueError):
                 actual_idx = row_idx
-            
-            # Fetch from DF is hard if we filtered. Better fetch from current full DF?
-            # Or just use the row data from the view if columns match.
-            # But the view might be filtered.
-            # For simplicity, if we filter, we might not get correct index unless we preserve 'idx'.
-            # DataService 'idx' is preserved.
-            
-            # We need to look up in full dataset by actual_idx
+
             full_df = data_service.load_dataset()
-            if "idx" in full_df.columns:
-                 row = full_df[full_df["idx"] == actual_idx]
-                 if row.empty: return None, "**Selected:** None", "", "lab", "", "", ""
-                 row = row.iloc[0]
-            else:
-                 # fallback
-                 if actual_idx < len(full_df): row = full_df.iloc[actual_idx]
-                 else: return None, "**Selected:** None", "", "lab", "", "", ""
-            
+            if actual_idx not in full_df.index:
+                return None, "**Selected:** None", "", "lab", "", "", ""
+
+            row = full_df.loc[actual_idx]
             name = row.get("name", "")
             source = row.get("source", "lab")
             precursor = row.get("full_precursor", "") or row.get("sequence", "")

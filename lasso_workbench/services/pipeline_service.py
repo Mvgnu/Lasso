@@ -8,6 +8,7 @@ from lasso_workbench.pipeline.semantic_pipeline import (
     BGCSegment,
     PipelineResult,
     parse_gbk_file,
+    ensure_unique_record_ids,
     Device,
 )
 from lasso_workbench.schemas.pipeline import RankingConfig
@@ -23,7 +24,6 @@ class PipelineService:
     def parse_uploaded_gbk_files(self, file_paths: List[str]) -> Tuple[List[BGCSegment], pd.DataFrame]:
         """Parse multiple GBK files and return segments and summary."""
         segments = []
-        summary_rows = []
         
         for idx, path_str in enumerate(file_paths, 1):
             path = Path(path_str)
@@ -31,14 +31,20 @@ class PipelineService:
             seg = parse_gbk_file(path, idx)
             if seg:
                 segments.append(seg)
-                summary_rows.append({
-                    "File": path.name,
-                    "Record ID": seg.record_id,
-                    "Length (nt)": seg.length,
-                    "CDS Count": len(seg.annotated_cds),
-                    "Lasso Detected": "Yes" if seg.is_lasso else "No"
-                })
-        
+
+        ensure_unique_record_ids(segments)
+
+        summary_rows = [
+            {
+                "File": Path(seg.source_file).name if seg.source_file else f"segment_{seg.index}",
+                "Record ID": seg.record_id,
+                "Length (nt)": seg.length,
+                "CDS Count": len(seg.annotated_cds),
+                "Lasso Detected": "Yes" if seg.is_lasso else "No",
+            }
+            for seg in segments
+        ]
+
         return segments, pd.DataFrame(summary_rows)
 
     def run_pipeline(

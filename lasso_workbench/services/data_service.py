@@ -116,7 +116,7 @@ class DataService:
     def update_entry(self, idx: int, updates: Dict[str, Any]) -> bool:
         """Update an entry by index."""
         df = self.load_dataset()
-        if idx < 0 or idx >= len(df):
+        if idx not in df.index:
             return False
         
         update_keys = [key for key in updates if key in df.columns]
@@ -128,10 +128,10 @@ class DataService:
     def delete_entry(self, idx: int) -> bool:
         """Delete an entry by index."""
         df = self.load_dataset()
-        if idx < 0 or idx >= len(df):
+        if idx not in df.index:
             return False
         
-        df = df.drop(index=idx)
+        df = df.drop(index=idx).reset_index(drop=True)
         self.save_dataset(df)
         return True
 

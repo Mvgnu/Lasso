@@ -159,8 +159,8 @@ def parse_gbk_folder(folder_path: Path) -> List[BGCSegment]:
         segment = parse_gbk_file(gbk_file, idx)
         if segment:
             segments.append(segment)
-    
-    return segments
+
+    return ensure_unique_record_ids(segments)
 
 
 # ---------------------------------------------------------------------------
@@ -265,6 +265,32 @@ def build_pipeline_metadata(
         top_n_mean=top_n_mean,
         ranking_config=ranking_config,
     )
+
+
+def ensure_unique_record_ids(
+    segments: List[BGCSegment],
+    progress: Optional[Callable[[str], None]] = None,
+) -> List[BGCSegment]:
+    """
+    Normalize and de-duplicate record IDs across segments.
+
+    Duplicate record IDs can cause candidate-id collisions and result-map overwrites.
+    """
+    seen: Dict[str, int] = {}
+    for idx, segment in enumerate(segments, start=1):
+        base_id = (segment.record_id or "").strip() or f"segment_{idx}"
+        count = seen.get(base_id, 0) + 1
+        seen[base_id] = count
+
+        if count == 1:
+            segment.record_id = base_id
+            continue
+
+        new_id = f"{base_id}__{count}"
+        segment.record_id = new_id
+        if progress is not None:
+            progress(f"Duplicate record_id '{base_id}' renamed to '{new_id}'")
+    return segments
 
 
 # ---------------------------------------------------------------------------
@@ -458,25 +484,32 @@ def results_to_dataframe(results: List[PipelineResult]) -> pd.DataFrame:
         return pd.DataFrame()
 
     df = pd.concat(frames, ignore_index=True)
-    columns = [
+    preferred_columns = [
         "record_id",
         "is_lasso_bgc",
         "candidate_id",
         "protein_sequence",
         "dna_sequence",
         "aa_length",
+        "frame",
         "strand",
         "genomic_start",
         "genomic_end",
+        "start_codon",
+        "is_alt_start",
         "best_similarity",
         "best_match_id",
         "top_n_mean_similarity",
         "embedding_score",
-        "is_known_precursor",
+        "combined_score",
+        "rule_score_raw",
         "rule_orientation",
+        "is_known_precursor",
         "genome_count",
     ]
-    return df.loc[:, [c for c in columns if c in df.columns]]
+    ordered = [c for c in preferred_columns if c in df.columns]
+    remaining = [c for c in df.columns if c not in ordered]
+    return df.loc[:, ordered + remaining]
 
 
 # ---------------------------------------------------------------------------
@@ -547,6 +580,8 @@ def run_semantic_pipeline(
         emit(f"[1/6] Filtered to lasso BGCs: {len(segments_list)} of {before_count}")
         if not segments_list:
             raise ValueError("No lasso-annotated BGCs found after filtering")
+
+    ensure_unique_record_ids(segments_list, progress=emit)
 
     for seg in segments_list:
         seg.metadata["restrict_to_lasso"] = bool(filter_lasso_only)

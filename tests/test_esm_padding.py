@@ -1,8 +1,15 @@
 import pytest
 import torch
-import numpy as np
 from transformers import AutoTokenizer, EsmModel
+import os
 
+
+RUN_ESM_MODEL_TESTS = os.getenv("RUN_ESM_MODEL_TESTS") == "1"
+
+@pytest.mark.skipif(
+    not RUN_ESM_MODEL_TESTS,
+    reason="Set RUN_ESM_MODEL_TESTS=1 to run model-loading integration tests.",
+)
 def test_esm2_padding_behavior():
     """
     Verify if ESM-2 last_hidden_state contains garbage in padded positions.
@@ -46,5 +53,5 @@ def test_esm2_padding_behavior():
         print("CONCLUSION: ESM-2 output is already zeroed for PAD tokens.")
         print("The manual masking logic is REDUNDANT.")
     
-    # Assert true to pass test, but print result for user
-    assert True
+    assert hs.shape[0] == len(seqs)
+    assert padded_vectors.numel() > 0

@@ -338,6 +338,42 @@ This pipeline:
             outputs=[pipeline_parse_status, pipeline_segments_state, pipeline_segments_preview]
         )
 
+        def _build_display_df(full_df: pd.DataFrame) -> pd.DataFrame:
+            """Build a UI-friendly table while preserving lossless machine columns."""
+            if full_df is None or full_df.empty:
+                return pd.DataFrame()
+
+            display_df = full_df.copy()
+
+            if "record_id" in display_df.columns and "Record" not in display_df.columns:
+                display_df["Record"] = display_df["record_id"]
+            if "candidate_id" in display_df.columns and "Candidate" not in display_df.columns:
+                display_df["Candidate"] = display_df["candidate_id"]
+            if "rule_score_raw" in display_df.columns and "Rule Score" not in display_df.columns:
+                display_df["Rule Score"] = display_df["rule_score_raw"]
+
+            if "Score" not in display_df.columns:
+                score_series = pd.Series(index=display_df.index, dtype=float)
+                for score_col in ("embedding_score", "top_n_mean_similarity", "best_similarity"):
+                    if score_col in display_df.columns:
+                        score_series = score_series.fillna(display_df[score_col])
+                display_df["Score"] = score_series
+
+            leading = ["Record", "Candidate", "Score", "Rule Score"]
+            ordered = [c for c in leading if c in display_df.columns]
+            trailing = [c for c in display_df.columns if c not in ordered]
+            return display_df.loc[:, ordered + trailing]
+
+        def _candidate_id_from_row(row: pd.Series) -> str:
+            for key in ("Candidate", "candidate_id"):
+                value = row.get(key)
+                if pd.isna(value):
+                    continue
+                candidate_id = str(value).strip()
+                if candidate_id:
+                    return candidate_id
+            return ""
+
         def run_analysis(
             segments,
             precursor_set,
@@ -354,7 +390,7 @@ This pipeline:
         ):
             if not segments:
                 empty_viz = "<div style='padding:40px;text-align:center;color:#64748b;'>Please parse files first</div>"
-                return "Please parse files first", "", pd.DataFrame(), "", None, [], empty_viz
+                return "Please parse files first", "", pd.DataFrame(), "", [], pd.DataFrame(), empty_viz
 
             # Resolve precursor path
             validated_faa = DEFAULT_PRECURSORS_PATH
@@ -378,7 +414,7 @@ This pipeline:
                 progress(0.5, desc=msg)
 
             try:
-                results, all_df = pipeline_service.run_pipeline(
+                results, _ = pipeline_service.run_pipeline(
                     segments=segments,
                     validated_faa_path=validated_faa,
                     min_aa=int(min_aa),
@@ -395,6 +431,7 @@ This pipeline:
                 from lasso_workbench.pipeline.semantic_pipeline import results_to_json, results_to_dataframe
                 json_data = results_to_json(results)
                 full_df = results_to_dataframe(results)
+                display_df = _build_display_df(full_df)
                 json_str = json.dumps(json_data, indent=2)
 
                 metadata_text = ""
@@ -411,7 +448,6 @@ This pipeline:
                 # Generate visualization HTML
                 viz_html = generate_gradio_iframe_html(json_data, initial_selection=[], title="Pipeline Results")
 
-                display_df = full_df
                 status = f"Completed! Found {len(display_df)} candidates across {len(results)} BGCs."
                 return status, metadata_text, display_df, json_str, json_data, full_df, viz_html
 
@@ -478,12 +514,12 @@ This pipeline:
             if evt is None or df is None or df.empty:
                 return current_selection, f"**Selected:** {len(current_selection)} candidates"
 
-            row_idx = evt.index[0]
+            row_idx = evt.index[0] if isinstance(evt.index, (list, tuple)) else int(evt.index)
             if row_idx >= len(df):
                 return current_selection, f"**Selected:** {len(current_selection)} candidates"
 
             row = df.iloc[row_idx]
-            candidate_id = str(row.get("Candidate", ""))
+            candidate_id = _candidate_id_from_row(row)
             if not candidate_id:
                 return current_selection, f"**Selected:** {len(current_selection)} candidates"
 
@@ -527,7 +563,12 @@ This pipeline:
             if df is None or df.empty:
                 return [], "**Selected:** 0 candidates"
 
-            all_ids = df["Candidate"].tolist() if "Candidate" in df.columns else []
+            if "Candidate" in df.columns:
+                all_ids = [str(v) for v in df["Candidate"].tolist() if str(v).strip()]
+            elif "candidate_id" in df.columns:
+                all_ids = [str(v) for v in df["candidate_id"].tolist() if str(v).strip()]
+            else:
+                all_ids = []
             return all_ids, f"**Selected:** {len(all_ids)} candidates"
 
         select_all_btn.click(

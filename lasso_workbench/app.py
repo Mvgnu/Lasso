@@ -116,7 +116,7 @@ def create_app() -> gr.Blocks:
                 
                 ## Documentation
                 
-                See DEVELOPMENT_PLAN.md for technical details.
+                See README.md and specs/*.md for technical details.
                 """)
          
         # Load initial data
