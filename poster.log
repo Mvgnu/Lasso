@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025/Homebrew) (preloaded format=xelatex 2026.1.29)  5 FEB 2026 19:28
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025/Homebrew) (preloaded format=xelatex 2026.1.29)  6 FEB 2026 14:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -938,64 +938,55 @@ Package beamerposter Info: fontscale=1.0, myfontscale=1.00 on input line 175.
 ( FP-ROUND ) ) ( FP-UPN ( FP-MUL ) ( FP-ROUND ) ) ( FP-UPN ( FP-MUL )
 ( FP-ROUND ) ) ( FP-UPN ( FP-MUL ) ( FP-ROUND ) ) ( FP-UPN ( FP-MUL )
 ( FP-ROUND ) ))
-(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/fontspec/fo
-ntspec.sty
-(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/l3packages/
-xparse/xparse.sty
-(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/l3kernel/ex
-pl3.sty
-Package: expl3 2025-01-18 L3 programming layer (loader) 
-
-(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/l3backend/l
-3backend-xetex.def
-File: l3backend-xetex.def 2024-05-08 L3 backend support: XeTeX
-\g__graphics_track_int=\count356
-\l__pdf_internal_box=\box78
-\g__pdf_backend_annotation_int=\count357
-\g__pdf_backend_link_int=\count358
-))
-Package: xparse 2024-08-16 L3 Experimental document command parser
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/lm/lmodern.
+sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
 )
-Package: fontspec 2024/05/11 v2.9e Font selection for XeLaTeX and LuaLaTeX
-
-(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/fontspec/fo
-ntspec-xetex.sty
-Package: fontspec-xetex 2024/05/11 v2.9e Font selection for XeLaTeX and LuaLaTe
-X
-\l__fontspec_script_int=\count359
-\l__fontspec_language_int=\count360
-\l__fontspec_strnum_int=\count361
-\l__fontspec_tmp_int=\count362
-\l__fontspec_tmpa_int=\count363
-\l__fontspec_tmpb_int=\count364
-\l__fontspec_tmpc_int=\count365
-\l__fontspec_em_int=\count366
-\l__fontspec_emdef_int=\count367
-\l__fontspec_strong_int=\count368
-\l__fontspec_strongdef_int=\count369
-\l__fontspec_tmpa_dim=\dimen296
-\l__fontspec_tmpb_dim=\dimen297
-\l__fontspec_tmpc_dim=\dimen298
-
-(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/fonten
-c.sty
-Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
-)
-(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/fontspec/fo
-ntspec.cfg)))
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/babel/bab
 el.sty
 Package: babel 2025/02/14 v25.4 The multilingual framework for pdfLaTeX, LuaLaT
 eX and XeLaTeX
-\babel@savecnt=\count370
-\U@D=\dimen299
+\babel@savecnt=\count356
+\U@D=\dimen296
 \l@unhyphenated=\language90
 
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/babel/xeb
 abel.def)
 \bbl@readstream=\read3
 LaTeX Info: Redefining \textlatin on input line 3835.
-\bbl@dirlevel=\count371
+\bbl@dirlevel=\count357
 
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/babel-eng
 lish/english.ldf
@@ -1016,17 +1007,17 @@ Package babel Info: Importing font and identification data for english
 icrotype.sty
 Package: microtype 2025/02/11 v3.2a Micro-typographical refinements (RS)
 \MT@toks=\toks48
-\MT@tempbox=\box79
-\MT@count=\count372
+\MT@tempbox=\box78
+\MT@count=\count358
 LaTeX Info: Redefining \noprotrusionifhmode on input line 1087.
 LaTeX Info: Redefining \leftprotrusion on input line 1088.
 \MT@prot@toks=\toks49
 LaTeX Info: Redefining \rightprotrusion on input line 1107.
 LaTeX Info: Redefining \textls on input line 1449.
-\MT@outer@kern=\dimen300
+\MT@outer@kern=\dimen297
 LaTeX Info: Redefining \microtypecontext on input line 2053.
 LaTeX Info: Redefining \textmicrotypecontext on input line 2070.
-\MT@listname@count=\count373
+\MT@listname@count=\count359
 
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/microtype/m
 icrotype-xetex.def
@@ -1046,23 +1037,23 @@ LaTeX Info: Redefining \microtypesetup on input line 3065.
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/booktabs/bo
 oktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
-\heavyrulewidth=\dimen301
-\lightrulewidth=\dimen302
-\cmidrulewidth=\dimen303
-\belowrulesep=\dimen304
-\belowbottomsep=\dimen305
-\aboverulesep=\dimen306
-\abovetopsep=\dimen307
-\cmidrulesep=\dimen308
-\cmidrulekern=\dimen309
-\defaultaddspace=\dimen310
-\@cmidla=\count374
-\@cmidlb=\count375
-\@aboverulesep=\dimen311
-\@belowrulesep=\dimen312
-\@thisruleclass=\count376
-\@lastruleclass=\count377
-\@thisrulewidth=\dimen313
+\heavyrulewidth=\dimen298
+\lightrulewidth=\dimen299
+\cmidrulewidth=\dimen300
+\belowrulesep=\dimen301
+\belowbottomsep=\dimen302
+\aboverulesep=\dimen303
+\abovetopsep=\dimen304
+\cmidrulesep=\dimen305
+\cmidrulekern=\dimen306
+\defaultaddspace=\dimen307
+\@cmidla=\count360
+\@cmidlb=\count361
+\@aboverulesep=\dimen308
+\@belowrulesep=\dimen309
+\@thisruleclass=\count362
+\@lastruleclass=\count363
+\@thisrulewidth=\dimen310
 )
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/pgfplots/pg
 fplots.sty
@@ -1079,7 +1070,7 @@ Package: pgf 2023-01-15 v3.1.10 (3.1.10)
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/modul
 es/pgfmoduleshapes.code.tex
 File: pgfmoduleshapes.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfnodeparttextbox=\box80
+\pgfnodeparttextbox=\box79
 )
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/modul
 es/pgfmoduleplot.code.tex
@@ -1088,8 +1079,8 @@ File: pgfmoduleplot.code.tex 2023-01-15 v3.1.10 (3.1.10)
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/pgf/compati
 bility/pgfcomp-version-0-65.sty
 Package: pgfcomp-version-0-65 2023-01-15 v3.1.10 (3.1.10)
-\pgf@nodesepstart=\dimen314
-\pgf@nodesepend=\dimen315
+\pgf@nodesepstart=\dimen311
+\pgf@nodesepend=\dimen312
 )
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/pgf/compati
 bility/pgfcomp-version-1-18.sty
@@ -1100,8 +1091,8 @@ es/pgffor.sty
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/utili
 ties/pgffor.code.tex
 Package: pgffor 2023-01-15 v3.1.10 (3.1.10)
-\pgffor@iter=\dimen316
-\pgffor@skip=\dimen317
+\pgffor@iter=\dimen313
+\pgffor@skip=\dimen314
 \pgffor@stack=\toks50
 \pgffor@toks=\toks51
 ))
@@ -1112,34 +1103,34 @@ Package: tikz 2023-01-15 v3.1.10 (3.1.10)
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/libra
 ries/pgflibraryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@plot@mark@count=\count378
-\pgfplotmarksize=\dimen318
+\pgf@plot@mark@count=\count364
+\pgfplotmarksize=\dimen315
 )
-\tikz@lastx=\dimen319
-\tikz@lasty=\dimen320
-\tikz@lastxsaved=\dimen321
-\tikz@lastysaved=\dimen322
-\tikz@lastmovetox=\dimen323
-\tikz@lastmovetoy=\dimen324
-\tikzleveldistance=\dimen325
-\tikzsiblingdistance=\dimen326
-\tikz@figbox=\box81
-\tikz@figbox@bg=\box82
-\tikz@tempbox=\box83
-\tikz@tempbox@bg=\box84
-\tikztreelevel=\count379
-\tikznumberofchildren=\count380
-\tikznumberofcurrentchild=\count381
-\tikz@fig@count=\count382
+\tikz@lastx=\dimen316
+\tikz@lasty=\dimen317
+\tikz@lastxsaved=\dimen318
+\tikz@lastysaved=\dimen319
+\tikz@lastmovetox=\dimen320
+\tikz@lastmovetoy=\dimen321
+\tikzleveldistance=\dimen322
+\tikzsiblingdistance=\dimen323
+\tikz@figbox=\box80
+\tikz@figbox@bg=\box81
+\tikz@tempbox=\box82
+\tikz@tempbox@bg=\box83
+\tikztreelevel=\count365
+\tikznumberofchildren=\count366
+\tikznumberofcurrentchild=\count367
+\tikz@fig@count=\count368
 
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/modul
 es/pgfmodulematrix.code.tex
 File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfmatrixcurrentrow=\count383
-\pgfmatrixcurrentcolumn=\count384
-\pgf@matrix@numberofcolumns=\count385
+\pgfmatrixcurrentrow=\count369
+\pgfmatrixcurrentcolumn=\count370
+\pgf@matrix@numberofcolumns=\count371
 )
-\tikz@expandcount=\count386
+\tikz@expandcount=\count372
 
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/front
 endlayer/tikz/libraries/tikzlibrarytopaths.code.tex
@@ -1152,9 +1143,9 @@ pgfplotscore.code.tex
 \t@pgfplots@toka=\toks52
 \t@pgfplots@tokb=\toks53
 \t@pgfplots@tokc=\toks54
-\pgfplots@tmpa=\dimen327
-\c@pgfplots@coordindex=\count387
-\c@pgfplots@scanlineindex=\count388
+\pgfplots@tmpa=\dimen324
+\c@pgfplots@coordindex=\count373
+\c@pgfplots@scanlineindex=\count374
 
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgfplots/
 sys/pgfplotssysgeneric.code.tex))
@@ -1179,13 +1170,13 @@ liststructure/pgfplotsliststructure.code.tex)
 liststructure/pgfplotsliststructureext.code.tex)
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgfplots/
 liststructure/pgfplotsarray.code.tex
-\c@pgfplotsarray@tmp=\count389
+\c@pgfplotsarray@tmp=\count375
 )
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgfplots/
 liststructure/pgfplotsmatrix.code.tex)
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgfplots/
 numtable/pgfplotstableshared.code.tex
-\c@pgfplotstable@counta=\count390
+\c@pgfplotstable@counta=\count376
 \t@pgfplotstable@a=\toks58
 )
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgfplots/
@@ -1198,13 +1189,13 @@ util/pgfplotsbinary.data.code.tex))
 util/pgfplotsutil.verb.code.tex)
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgfplots/
 libs/pgflibrarypgfplots.surfshading.code.tex
-\c@pgfplotslibrarysurf@no=\count391
+\c@pgfplotslibrarysurf@no=\count377
 
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgfplots/
 sys/pgflibrarypgfplots.surfshading.pgfsys-xetex.def
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgfplots/
 sys/pgflibrarypgfplots.surfshading.pgfsys-dvipdfmx.def
-\c@pgfplotslibrarysurf@streamlen=\count392
+\c@pgfplotslibrarysurf@streamlen=\count378
 ))))
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgfplots/
 util/pgfplotscolormap.code.tex
@@ -1234,16 +1225,16 @@ pgfplots.paths.code.tex)
 endlayer/tikz/libraries/tikzlibrarydecorations.code.tex
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/modul
 es/pgfmoduledecorations.code.tex
-\pgfdecoratedcompleteddistance=\dimen328
-\pgfdecoratedremainingdistance=\dimen329
-\pgfdecoratedinputsegmentcompleteddistance=\dimen330
-\pgfdecoratedinputsegmentremainingdistance=\dimen331
-\pgf@decorate@distancetomove=\dimen332
-\pgf@decorate@repeatstate=\count393
-\pgfdecorationsegmentamplitude=\dimen333
-\pgfdecorationsegmentlength=\dimen334
+\pgfdecoratedcompleteddistance=\dimen325
+\pgfdecoratedremainingdistance=\dimen326
+\pgfdecoratedinputsegmentcompleteddistance=\dimen327
+\pgfdecoratedinputsegmentremainingdistance=\dimen328
+\pgf@decorate@distancetomove=\dimen329
+\pgf@decorate@repeatstate=\count379
+\pgfdecorationsegmentamplitude=\dimen330
+\pgfdecorationsegmentlength=\dimen331
 )
-\tikz@lib@dec@box=\box85
+\tikz@lib@dec@box=\box84
 )
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/front
 endlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.code.tex
@@ -1255,13 +1246,13 @@ endlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing.code.tex
 ries/decorations/pgflibrarydecorations.pathreplacing.code.tex))
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgfplots/
 libs/tikzlibrarypgfplots.contourlua.code.tex)
-\pgfplots@numplots=\count394
-\pgfplots@xmin@reg=\dimen335
-\pgfplots@xmax@reg=\dimen336
-\pgfplots@ymin@reg=\dimen337
-\pgfplots@ymax@reg=\dimen338
-\pgfplots@zmin@reg=\dimen339
-\pgfplots@zmax@reg=\dimen340
+\pgfplots@numplots=\count380
+\pgfplots@xmin@reg=\dimen332
+\pgfplots@xmax@reg=\dimen333
+\pgfplots@ymin@reg=\dimen334
+\pgfplots@ymax@reg=\dimen335
+\pgfplots@zmin@reg=\dimen336
+\pgfplots@zmax@reg=\dimen337
 )
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/front
 endlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
@@ -1283,38 +1274,6 @@ ercolorthemeorchid.sty)
 erinnerthemerectangles.sty))
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/beamer/beam
 erfontthemeprofessionalfonts.sty)
-
-Package fontspec Info: 
-(fontspec)             Font family 'NotoSans(0)' created for font 'Noto Sans'
-(fontspec)             with options [Ligatures=TeX].
-(fontspec)              
-(fontspec)              This font family consists of the following NFSS
-(fontspec)             series/shapes:
-(fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.: <->"Noto
-(fontspec)             Sans/OT:script=latn;language=dflt;mapping=tex-text;"
-(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: <->"Noto
-(fontspec)             Sans/OT:script=latn;language=dflt;+smcp;mapping=tex-text
-;"
-(fontspec)             - 'bold' (b/n) with NFSS spec.: <->"Noto
-(fontspec)             Sans/B/OT:script=latn;language=dflt;mapping=tex-text;"
-(fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: <->"Noto
-(fontspec)             Sans/B/OT:script=latn;language=dflt;+smcp;mapping=tex-te
-xt;"
-(fontspec)             - 'italic' (m/it) with NFSS spec.: <->"Noto
-(fontspec)             Sans/I/OT:script=latn;language=dflt;mapping=tex-text;"
-(fontspec)             - 'italic small caps'  (m/scit) with NFSS spec.:
-(fontspec)             <->"Noto
-(fontspec)             Sans/I/OT:script=latn;language=dflt;+smcp;mapping=tex-te
-xt;"
-(fontspec)             - 'bold italic' (b/it) with NFSS spec.: <->"Noto
-(fontspec)             Sans/BI/OT:script=latn;language=dflt;mapping=tex-text;"
-(fontspec)             - 'bold italic small caps'  (b/scit) with NFSS spec.:
-(fontspec)             <->"Noto
-(fontspec)             Sans/BI/OT:script=latn;language=dflt;+smcp;mapping=tex-t
-ext;"
-
-
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/front
 endlayer/tikz/libraries/tikzlibraryshapes.code.tex
 File: tikzlibraryshapes.code.tex 2023-01-15 v3.1.10 (3.1.10)
@@ -1362,26 +1321,26 @@ File: tikzlibraryshapes.multipart.code.tex 2023-01-15 v3.1.10 (3.1.10)
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/libra
 ries/shapes/pgflibraryshapes.multipart.code.tex
 File: pgflibraryshapes.multipart.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfnodepartlowerbox=\box86
-\pgfnodeparttwobox=\box87
-\pgfnodepartthreebox=\box88
-\pgfnodepartfourbox=\box89
-\pgfnodeparttwentybox=\box90
-\pgfnodepartnineteenbox=\box91
-\pgfnodeparteighteenbox=\box92
-\pgfnodepartseventeenbox=\box93
-\pgfnodepartsixteenbox=\box94
-\pgfnodepartfifteenbox=\box95
-\pgfnodepartfourteenbox=\box96
-\pgfnodepartthirteenbox=\box97
-\pgfnodeparttwelvebox=\box98
-\pgfnodepartelevenbox=\box99
-\pgfnodeparttenbox=\box100
-\pgfnodepartninebox=\box101
-\pgfnodeparteightbox=\box102
-\pgfnodepartsevenbox=\box103
-\pgfnodepartsixbox=\box104
-\pgfnodepartfivebox=\box105
+\pgfnodepartlowerbox=\box85
+\pgfnodeparttwobox=\box86
+\pgfnodepartthreebox=\box87
+\pgfnodepartfourbox=\box88
+\pgfnodeparttwentybox=\box89
+\pgfnodepartnineteenbox=\box90
+\pgfnodeparteighteenbox=\box91
+\pgfnodepartseventeenbox=\box92
+\pgfnodepartsixteenbox=\box93
+\pgfnodepartfifteenbox=\box94
+\pgfnodepartfourteenbox=\box95
+\pgfnodepartthirteenbox=\box96
+\pgfnodeparttwelvebox=\box97
+\pgfnodepartelevenbox=\box98
+\pgfnodeparttenbox=\box99
+\pgfnodepartninebox=\box100
+\pgfnodeparteightbox=\box101
+\pgfnodepartsevenbox=\box102
+\pgfnodepartsixbox=\box103
+\pgfnodepartfivebox=\box104
 )))
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/front
 endlayer/tikz/libraries/tikzlibraryarrows.code.tex
@@ -1390,7 +1349,7 @@ File: tikzlibraryarrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/libra
 ries/pgflibraryarrows.code.tex
 File: pgflibraryarrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\arrowsize=\dimen341
+\arrowsize=\dimen338
 ))
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pgf/front
 endlayer/tikz/libraries/tikzlibrarypositioning.code.tex
@@ -1398,39 +1357,47 @@ File: tikzlibrarypositioning.code.tex 2023-01-15 v3.1.10 (3.1.10)
 )
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 62.
+(hyperref)                removing `math shift' on input line 61.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\beta' on input line 62.
+(hyperref)                removing `\beta' on input line 61.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 62.
+(hyperref)                removing `math shift' on input line 61.
 
-(./poster.aux)
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/l3backend/l
+3backend-xetex.def
+File: l3backend-xetex.def 2024-05-08 L3 backend support: XeTeX
+\g__graphics_track_int=\count381
+\l__pdf_internal_box=\box105
+\g__pdf_backend_annotation_int=\count382
+\g__pdf_backend_link_int=\count383
+) (./poster.aux)
 \openout1 = `poster.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 62.
-LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1466,7 +1433,7 @@ LaTeX Font Info:    ... okay on input line 62.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 62.
+Package hyperref Info: Link coloring OFF on input line 61.
 (./poster.out) (./poster.out)
 \@outlinefile=\write5
 \openout5 = `poster.out'.
@@ -1496,80 +1463,20 @@ Dictionary: translator-numbers-dictionary, Language: English
 translator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
-
-Package fontspec Info: 
-(fontspec)             Adjusting the maths setup (use [no-math] to avoid
-(fontspec)             this).
-
-\symlegacymaths=\mathgroup6
-LaTeX Font Info:    Overwriting symbol font `legacymaths' in version `bold'
-(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 62.
-LaTeX Font Info:    Redeclaring math accent \acute on input line 62.
-LaTeX Font Info:    Redeclaring math accent \grave on input line 62.
-LaTeX Font Info:    Redeclaring math accent \ddot on input line 62.
-LaTeX Font Info:    Redeclaring math accent \tilde on input line 62.
-LaTeX Font Info:    Redeclaring math accent \bar on input line 62.
-LaTeX Font Info:    Redeclaring math accent \breve on input line 62.
-LaTeX Font Info:    Redeclaring math accent \check on input line 62.
-LaTeX Font Info:    Redeclaring math accent \hat on input line 62.
-LaTeX Font Info:    Redeclaring math accent \dot on input line 62.
-LaTeX Font Info:    Redeclaring math accent \mathring on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Delta on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Theta on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Xi on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Pi on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Phi on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Psi on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \Omega on input line 62.
-LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 62.
-LaTeX Font Info:    Redeclaring symbol font `operators' on input line 62.
-LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 62.
-LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> TU/NotoSans(0)/m/n on input line 62.
-LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 62.
-LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> TU/NotoSans(0)/m/n on input line 62.
-LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  TU/NotoSans(0)/m/n --> TU/NotoSans(0)/m/n on input line
- 62.
-LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/NotoSans(0)/m/it on input line 62.
-LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/NotoSans(0)/b/n on input line 62.
-LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/NotoSans(0)/m/n on input line 62.
-LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 62.
-LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  TU/NotoSans(0)/m/n --> TU/NotoSans(0)/b/n on input line
- 62.
-LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> TU/NotoSans(0)/b/it on input line 62.
-
-LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/NotoSans(0)/b/n on input line 62.
-LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 62.
-LaTeX Info: Redefining \microtypecontext on input line 62.
-Package microtype Info: Applying patch `item' on input line 62.
-Package microtype Info: Applying patch `toc' on input line 62.
-Package microtype Info: Applying patch `eqnum' on input line 62.
-Package microtype Info: Applying patch `footnote' on input line 62.
-Package microtype Info: Applying patch `verbatim' on input line 62.
-LaTeX Info: Redefining \microtypesetup on input line 62.
+LaTeX Info: Redefining \microtypecontext on input line 61.
+Package microtype Info: Applying patch `item' on input line 61.
+Package microtype Info: Applying patch `toc' on input line 61.
+Package microtype Info: Applying patch `eqnum' on input line 61.
+Package microtype Info: Applying patch `footnote' on input line 61.
+Package microtype Info: Applying patch `verbatim' on input line 61.
+LaTeX Info: Redefining \microtypesetup on input line 61.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of spacing.
 Package microtype Info: No adjustment of kerning.
 Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `NotoSans' (encoding: TU).
+(microtype)             `lmss' (encoding: TU).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
@@ -1580,6 +1487,49 @@ s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 File: uni-tuebingen.png Graphic file (type bmp)
 <uni-tuebingen.png>
 LaTeX Font Info:    Calculating math sizes for size <43> on input line 343.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 3
+43.
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/lm/ot1lmr.f
+d
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/microtype/m
+t-LatinModernRoman.cfg
+File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
+ern Roman (RS)
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `lmr' (encoding: OT1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3
+43.
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/lm/omllmm.f
+d
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
+343.
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/lm/omslmsy.
+fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
+343.
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/lm/omxlmex.
+fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <43> on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <30.09987> on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <21.5> on input line 343.
 
 (/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/microtype/m
 t-msa.cfg
@@ -1589,25 +1539,44 @@ File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 t-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/microtype/m
-t-cmr.cfg
-File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
-(RS)
-)
-\toprowheight=\skip67
 LaTeX Font Info:    Calculating math sizes for size <29.86> on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <29.86> on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <20.9019> on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <14.93> on input line 343.
+LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <29.86> not available
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 343.
 Package pgfplots info on input line 343: Using 'lua backend=false' for axis: x 
 coord trafo unsupported.
 LaTeX Font Info:    Calculating math sizes for size <35.83> on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <35.83> on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <25.08089> on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <17.915> on input line 343.
+LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <20.74> not available
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <20.74> on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <14.4> on input line 343.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <12> on input line 343.
 Package pgfplots info on input line 343: Using 'lua backend=false' for axis: x 
 coord trafo unsupported.
 PGFPlots: reading {poster_assets/altframe_scatter_all.tsv}
 PGFPlots: reading {poster_assets/altframe_scatter_sig.tsv}
-\bottomrowheight=\skip68
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmtt' (encoding: TU).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
+
+Overfull \vbox (1.03413pt too high) detected at line 343
+ []
+
 
 
 [1
@@ -1631,12 +1600,12 @@ Package rerunfilecheck Info: File `poster.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 43874 strings out of 473832
- 1089067 string characters out of 5719382
- 1861175 words of memory out of 5000000
- 66125 multiletter control sequences out of 15000+600000
- 578034 words of font info for 145 fonts, out of 8000000 for 9000
+ 41524 strings out of 473832
+ 1001613 string characters out of 5719382
+ 1761119 words of memory out of 5000000
+ 63799 multiletter control sequences out of 15000+600000
+ 607904 words of font info for 116 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,21n,123p,1003b,3021s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,21n,123p,1003b,3004s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on poster.pdf (1 page).

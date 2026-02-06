@@ -1,0 +1,344 @@
+% --- UNIVERSAL PREAMBLE BLOCK (Adapted for Beamer Poster) ---
+\documentclass[final]{beamer}
+\usepackage[orientation=portrait,size=a0,scale=1.0]{beamerposter}
+% Keep font setup TeX-live portable (avoid requiring system fonts).
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage{booktabs}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% Layout and Appearance
+\usetheme{Berlin}
+\usecolortheme{whale}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption}[numbered]
+\definecolor{TuebingenBlue}{RGB}{0, 86, 158}
+\definecolor{TuebingenBlueLight}{RGB}{40, 120, 190}
+\setbeamercolor{footlinebar}{bg=TuebingenBlue,fg=white}
+\setbeamercolor{footlinebarlight}{bg=TuebingenBlueLight,fg=white}
+\setbeamertemplate{footline}{
+    \begin{beamercolorbox}[wd=\paperwidth,ht=0.55cm,dp=0cm]{footlinebar}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[wd=\paperwidth,ht=0.25cm,dp=0cm]{footlinebarlight}
+    \end{beamercolorbox}
+}
+
+% Fonts - LARGER SIZES
+\usefonttheme{professionalfonts}
+
+% Colors for custom boxes
+\definecolor{TuebingenRed}{RGB}{165, 30, 55}
+\definecolor{DarkSlate}{RGB}{47, 79, 79}
+\setbeamercolor{block title}{bg=TuebingenRed,fg=white}
+\setbeamercolor{block body}{bg=white,fg=black}
+\setbeamercolor{alerted text}{fg=TuebingenRed}
+\setbeamercolor{tldrbox}{bg=gray!10,fg=black}
+\setbeamercolor{tldrtitle}{bg=TuebingenRed,fg=white}
+\setbeamerfont{block title}{size=\LARGE}
+\setbeamerfont{block body}{size=\large}
+\setbeamerfont{itemize/enumerate body}{size=\large}
+\setbeamerfont{itemize/enumerate subbody}{size=\large}
+
+% Contextual block style for top/bottom rows
+\setbeamercolor{block title contextual}{bg=DarkSlate,fg=white}
+\setbeamercolor{block body contextual}{bg=white,fg=black}
+
+% Graphicx
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
+
+% --- POSTER CONTENT ---
+
+\title{\Huge \textbf{A General Pipeline for Genome Mining of Peptides and Enzymes Using Protein Language Models}}
+\subtitle{\LARGE Lasso peptide precursors, $\beta$-lactamases, and conserved alt-frame micropeptides from all-ORF search spaces}
+\author{\large \textbf{Magnus Ohle} \and Nadine Ziemert}
+\institute{\large Translational Genome Mining for Natural Products, Universität Tübingen}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[t]
+
+% --- LOGO ABOVE TITLE ---
+\vspace*{0.01\paperheight}
+\begin{flushleft}
+    \hspace{1cm}\includegraphics[height=4cm]{uni-tuebingen.png}
+\end{flushleft}
+\vspace{0.3cm}
+
+% --- HEADER BLOCK ---
+\begin{beamercolorbox}[wd=\paperwidth,sep=0.5cm,center]{headline}
+    \usebeamerfont{title}\inserttitle\par
+    \vspace{0.4em}
+    \usebeamerfont{subtitle}\insertsubtitle\par
+    \vspace{0.8em}
+    \usebeamerfont{author}\insertauthor\par
+    \vspace{0.3em}
+    \usebeamerfont{institute}\insertinstitute
+\end{beamercolorbox}
+\vspace{0.25cm}
+
+% ============================================================================
+% TOP ROW: TL;DR / Briefing / Methods (Contextual)
+% ============================================================================
+\begingroup
+\setbeamercolor{block title}{use=block title contextual,bg=block title contextual.bg,fg=block title contextual.fg}
+
+\begin{columns}[T]
+
+\begin{column}{0.32\paperwidth}
+    \begin{beamercolorbox}[wd=\linewidth, sep=1em, rounded=true, shadow=true]{tldrbox}
+        \begin{beamercolorbox}[wd=\dimexpr\linewidth-2em\relax, sep=0.4em, center]{tldrtitle}
+            \textbf{\Huge TL;DR}
+        \end{beamercolorbox}
+        \vspace{0.6em}
+        {\large
+        \begin{itemize}
+            \item \textbf{Take-home:} Exhaustive ORF enumeration + frozen protein language model embeddings enables \textbf{annotation-free retrieval} of peptides and enzymes from genomes.
+            \item \textbf{All-ORF:} 6-frame translation with length filters (20--120 aa lasso; 200--400 aa $\beta$-lactamase) + frozen ESM2.
+            \item \textbf{Generalizable:} Same pipeline for lassos and $\beta$-lactamases.
+            \item \textbf{Performance:} 92\% lasso Top-50 recall; 100\% Top-5 $\beta$-lactamase recall.
+            \item \textbf{Discovery:} Alt-frame loci with conservation beyond a synonymous null ($z > 10$).
+        \end{itemize}
+        }
+    \end{beamercolorbox}
+\end{column}
+
+\begin{column}{0.32\paperwidth}
+    \begin{block}{Briefing: The Concept}
+        {\large
+        \textbf{Background:}
+        \textbf{Lasso peptides} are ribosomally synthesized natural products (RiPPs) whose mature peptide forms a \textbf{lariat-knot} topology; they originate from short precursor peptides (leader + core).
+        \textbf{Genome mining} searches genomes for biosynthetic genes and precursors to discover new natural products.
+
+        \vspace{0.4em}
+        \textbf{Main challenge:} Short and alternative ORFs are often \textbf{missed or mis-annotated}, and family-specific models (e.g. HMMs) can miss \textbf{divergent} variants.
+
+        \vspace{0.4em}
+        \textbf{Aim / hypothesis:} A frozen protein language model provides a \textbf{family-agnostic similarity signal} that enables retrieval of true targets from an \textbf{exhaustive all-ORF} search space.
+
+        \vspace{0.4em}
+        \textbf{Proposed solution:} \textit{Embedding-based Retrieval from an All-ORF Search Space}
+        \begin{itemize}
+            \item \textbf{Input:} Raw DNA $\rightarrow$ 6-frame ORF enumeration.
+            \item \textbf{Engine:} Frozen ESM2-8M/35M embeddings.
+            \item \textbf{Query:} Cosine similarity to seed sequences.
+        \end{itemize}
+        }
+    \end{block}
+\end{column}
+
+\begin{column}{0.32\paperwidth}
+    \begin{block}{Approach\vphantom{g}}
+        {\large
+        \textbf{Pipeline}
+        \begin{enumerate}
+            \item \textbf{Extraction:} Window $\pm$20kb or full genome.
+            \item \textbf{Embedding:} Mean-pooled ESM2.
+            \item \textbf{Ranking:} Top-$N$ mean cosine similarity (consensus over multiple nearest hits) to reduce single-hit noise.
+        \end{enumerate}
+
+        \vspace{0.4em}
+        \textbf{Proposed solution (one line):} enumerate all ORFs $\rightarrow$ embed with ESM2 $\rightarrow$ rank by similarity to validated seeds (no task-specific training).
+        
+        \vspace{0.5em}
+        \textbf{Validation}
+        \begin{itemize}
+            \item \textbf{Lasso:} 255 loci, 1,869 genomes (20--120 aa filter).
+            \item \textbf{Beta-lac:} 5 full genomes (23k--45k ORFs per genome; 200--400 aa filter).
+            \item \textbf{Alt-frame:} 88 loci, synonymous null ($N=200$).
+        \end{itemize}
+        }
+    \end{block}
+\end{column}
+
+\end{columns}
+\endgroup
+
+% ============================================================================
+% MIDDLE ROW: Act I / Act II (Results - Red, Center of Attention)
+% ============================================================================
+\begin{columns}[T]
+
+\begin{column}{0.48\paperwidth}
+    \begin{block}{Semantic Retrieval: Lasso Peptides}
+        {\large \textbf{Test:} Retrieve $\sim$40 aa precursors from a $\sim$40 kb all-ORF search space (20--120 aa; 255 loci).}
+
+        \vspace{0.3em}
+        {\large \textbf{What you see:} Top-k recall = fraction of loci where the known precursor ORF ranks within the top $k$ among all candidate ORFs in the window.}\\
+        {\large \textbf{Take-home:} Embedding retrieval can recover short, diverse RiPP precursors despite large all-ORF background noise.}
+        
+        \vspace{0.5em}
+        \begin{center}
+        \begin{tikzpicture}
+        \begin{axis}[
+            width=0.85\linewidth, height=10.5cm,
+            ybar, ymin=0, ymax=1,
+            ytick={0,0.25,0.5,0.75,1.0}, yticklabels={0\%,25\%,50\%,75\%,100\%},
+            symbolic x coords={Top-1,Top-5,Top-10,Top-50},
+            xtick=data, bar width=24pt,
+            axis x line*=bottom, axis y line*=left,
+            nodes near coords,
+            nodes near coords style={font=\Large},
+            tick label style={font=\large},
+        ]
+            \addplot[fill=TuebingenRed!70, draw=TuebingenRed] coordinates {
+                (Top-1,0.475) (Top-5,0.627) (Top-10,0.824) (Top-50,0.918)
+            };
+        \end{axis}
+        \end{tikzpicture}
+        \end{center}
+        \vspace{0.3em}
+        {\large \textbf{Result:} $\sim$92\% recall in Top-50. Embedding retrieval performs well on short, variable RiPP precursors.}\\
+        \vspace{0.2em}
+        {\small \textit{Model comparison:} ESM2-8M $\rightarrow$ 35M improves retrieval; 150M shows degraded performance in the all-ORF setting.}
+    \end{block}
+    
+    \vspace{0.6cm}
+    
+    \begin{block}{Semantic Retrieval: $\beta$-lactamases}
+        {\large \textbf{Stress Test:} Retrieve a known enzyme from full-genome ORF enumeration (200--400 aa; 23k--45k ORFs).}
+
+        \vspace{0.3em}
+        {\large \textbf{What you see:} Holdout by accession; rank all 200--400 aa ORFs extracted from full genomes.}\\
+        {\large \textbf{Take-home:} The same retrieval engine generalizes from short precursors to enzyme-sized proteins without re-training.}
+        
+        \vspace{0.5em}
+        \begin{beamercolorbox}[wd=\linewidth, rounded=true, shadow=false, sep=0.6em, center]{block body}
+            \textbf{\LARGE Result: 100\% Top-5 Recall (5/5 Genomes)}
+        \end{beamercolorbox}
+        
+        \vspace{0.5em}
+        \begin{center}
+        \begin{tikzpicture}
+        \begin{axis}[
+            width=0.85\linewidth, height=10.5cm,
+            ybar, ymin=0, ymax=1,
+            ytick={0,0.25,0.5,0.75,1.0}, yticklabels={0\%,25\%,50\%,75\%,100\%},
+            symbolic x coords={Top-1,Top-5,Top-10,Top-50},
+            xtick=data, bar width=24pt,
+            axis x line*=bottom, axis y line*=left,
+            nodes near coords,
+            nodes near coords style={font=\Large},
+            tick label style={font=\large},
+        ]
+            \addplot[fill=TuebingenRed!70, draw=TuebingenRed] coordinates {
+                (Top-1,0.8) (Top-5,1.0) (Top-10,1.0) (Top-50,1.0)
+            };
+        \end{axis}
+        \end{tikzpicture}
+        \end{center}
+        {\large \textbf{Implication:} Family-agnostic retrieval generalizes without task-specific training.}
+    \end{block}
+\end{column}
+
+\begin{column}{0.48\paperwidth}
+    \begin{block}{ORF evaluation: Alt-Frame Micropeptides}
+        {\large \textbf{Question:} Are overlapping-frame peptides under selective constraint?}
+        \vspace{0.3em}
+        
+        {\large \textbf{Method:} ORF conservation vs. \textbf{Synonymous Null}.
+        \begin{itemize}
+            \item Preserve main CDS amino acids.
+            \item Shuffle synonymous codons (N=200).
+            \item If alt-frame conservation exceeds null $\Rightarrow$ evidence of constraint.
+        \end{itemize}
+        }
+
+        \vspace{0.8em}
+        {\large \textbf{What you see:} Each point is one locus; $x$ = expected identity under synonymous-codon shuffling (null), $y$ = observed identity among surviving (stop-free) peptides.}\\
+        {\large \textbf{Take-home:} Loci above the diagonal (red, $z>10$) show alt-frame conservation beyond what is expected from constraints on the primary CDS alone.}
+
+        \vspace{0.4em}
+        \begin{center}
+        \begin{tikzpicture}
+        \begin{axis}[
+            width=0.9\linewidth, height=21cm,
+            xlabel={Null identity mean}, ylabel={Observed identity},
+            xmin=0, xmax=1, ymin=0, ymax=1,
+            xtick={0, 0.25, 0.5, 0.75, 1.0},
+            ytick={0, 0.25, 0.5, 0.75, 1.0},
+            grid=both, grid style={line width=.1pt, draw=gray!30},
+            legend pos=south east,
+            label style={font=\large},
+            tick label style={font=\large},
+            legend style={font=\large},
+        ]
+            \addplot[only marks, mark=*, mark size=4pt, color=gray!50]
+                table [x=null_identity_mean, y=obs_identity, col sep=tab] {poster_assets/altframe_scatter_all.tsv};
+            \addplot[only marks, mark=*, mark size=5pt, color=TuebingenRed]
+                table [x=null_identity_mean, y=obs_identity, col sep=tab] {poster_assets/altframe_scatter_sig.tsv};
+            \legend{all loci, $z>10$ loci}
+        \end{axis}
+        \end{tikzpicture}
+        \end{center}
+        
+        \vspace{0.5em}
+        {\large \textbf{Finding:} 32/88 loci show strong alt-frame conservation ($z > 10$; $z$ computed from the null identity distribution).
+        \begin{itemize}
+            \item \textbf{phnU} ($z=70.18$), \textbf{cyoA} ($z=30.30$), and \textbf{ceoR} ($z=27.85$) are extreme outliers.
+            \item Consistent with unannotated micropeptides.
+        \end{itemize}
+        }
+
+        \vspace{0.4em}
+        {\small \textit{Complementary signal:} A genome-wide ORF index can simply count how often identical peptides recur across genomes or BGC regions, acting as a fast frequency-based triage without null permutations.}
+    \end{block}
+\end{column}
+
+\end{columns}
+
+\vspace{0.25cm}
+
+% ============================================================================
+% BOTTOM ROW: Discussion / Outlook / Conclusion (Contextual)
+% ============================================================================
+\begingroup
+\setbeamercolor{block title}{use=block title contextual,bg=block title contextual.bg,fg=block title contextual.fg}
+
+\begin{columns}[T]
+
+\begin{column}{0.32\paperwidth}
+    \begin{block}{Discussion: Implications\vphantom{g}}
+        {\large
+        \begin{itemize}
+            \item \textbf{Simple, Scalable Prior:} Exhaustive all-ORF enumeration + frozen PLM embeddings retrieves short RiPPs and larger enzymes without complex HMMs.
+            \item \textbf{Model Efficiency:} ESM2-8M/35M perform strongly for retrieval, with a sharper similarity landscape than larger models.
+            \item \textbf{Altframes:} The codon-preserving null suggests specific alt-frame ORFs (e.g., \textit{phnU}, \textit{ceoR}) show conservation consistent with functional micropeptides.
+        \end{itemize}
+        }
+    \end{block}
+\end{column}
+
+\begin{column}{0.32\paperwidth}
+    \begin{block}{Outlook\vphantom{g}}
+        {\large
+        \begin{itemize}
+            \item \textbf{General Engine:} Applicable to any family given validated precursors; model limitations should be evaluated per target.
+            \item \textbf{Systematic Mining:} Scale ORF indexing for rapid cross-genome queries and candidate triage.
+            \item \textbf{Targeted Validation:} Prioritize high-scoring alt-frame candidates and ambiguous $\beta$-lactamase ORFs for follow-up.
+        \end{itemize}
+        }
+    \end{block}
+\end{column}
+
+\begin{column}{0.32\paperwidth}
+    \begin{block}{Conclusion\vphantom{g}}
+        {\large
+        This project demonstrates that frozen protein language models, applied to exhaustive ORF enumeration, can retrieve diverse gene families without task-specific training.
+        This makes genome mining less dependent on perfect annotation and family-specific models, and it surfaces candidate biology that is easy to miss (short ORFs, alt-frame peptides).
+        
+        \vspace{0.8em}
+        \textbf{Code and all results:} \texttt{github.com/Mvgnu/Lasso}
+        }
+    \end{block}
+\end{column}
+
+\end{columns}
+\endgroup
+
+\end{frame}
+\end{document}
